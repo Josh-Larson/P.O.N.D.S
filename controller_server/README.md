@@ -9,3 +9,10 @@ The central server has the following requirements:
     * Provided other status information? (To be continued)
 2. Serve as a RPC server
     * Clients (Pond Pis) connect to the controller to serve status information
+
+
+## Environment Setup 
+
+``` 
+pip install -r requirements.txt
+```
