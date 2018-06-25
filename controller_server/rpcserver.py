@@ -22,10 +22,14 @@ class PondController:
 class ServerMethods:
     def setPondStatus(incoming_status):
         PondController.pond_status = incoming_status
+        print("Received incoming_status as: "+ str(incoming_status))
         return PondController.pond_status
     def register_connection(uuid, name ):
         PondController.current_connections[uuid] = name
-        return PondController.current_connections
+        print("Current connections:")
+        print(PondController.current_connections)
+        return True
+
    
 
 server.register_instance(ServerMethods)
