@@ -1,5 +1,8 @@
 # Pond Controller
 
+In this folder is the "Pond Controller" i.e. the code for the Raspberry Pi in the central hallway. 
+All code for the central Pi controller will be in this folder.
+
 The central server has the following requirements:
 
 1. Serve as a webserver (Python Flask)

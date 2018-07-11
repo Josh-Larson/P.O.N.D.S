@@ -1,5 +1,7 @@
 # Pond Clients
 
+All of the code of the two Raspberry Pis that actually control fountain pumps will be in this folder. 
+
 The two pond Pis have the ideal requirements:
 
 1. Clients (Pond Pis) connect to the central controller to serve status information
