@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>2 Animate Flow Arrow</title>
+    <script type="text/javascript" src="./web_assets/js/svg.min.js"></script>
+    <script type="text/javascript" src="./web_assets/js/d3.v4.min.js"></script>
+
+
+</head>
+
+<body style="padding:10px;font-family:arial">
+    <center>
+        <h1> Mad Duck Pond SCADA Control System</h1>
+        <h2>West Pond Control</h2>
+        <center>
+            <button class="pausebtn" id="west_ctrl">Stop Pump</button>
+        </center>
+
+        <p></p> This is running animation library
+        <a href="http://svgjs.com/">SVG.js</a> and D3.
+
+
+        <div class="west_ctrl" style="background-color:white;width:600px;height:200px;">
+            <svg xmlns="http://www.w3.org/2000/svg" id="mySVG" width="400" height="400" viewBox="0 0 400 400" style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                <style xmlns="http://www.w3.org/1999/xhtml"></style>
+                <defs xmlns="http://www.w3.org/1999/xhtml"></defs>
+
+                <defs id="arrowDefs">
+                    <marker id="arrowEnd" viewBox="0 0 8000 8000" refX="280" refY="150" markerUnits="strokeWidth" markerWidth="300" markerHeight="300"
+                        orient="auto" fill="black" stroke-linejoin="bevel">
+                        <path id="arrowEndPath" stroke="RGB(0,0,0)" stroke-width="5" d="M2 59,293 148,1 243,121 151,Z">
+                        </path>
+                    </marker>
+                </defs>
+                <g id="publishG">
+                    <g id="publishElemG" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+                        <path fill="none" id="west_ctrl_pipe" fill-opacity="1.0" stroke="#7CFC00" stroke-width="25" d="M 163.40000915527344 55.600006103515625 L 79.40000915527344 54.600006103515625 L 79.40000915527344 147.60000610351562 L 334.3999938964844 149.60000610351562 
+                L 333.3999938964844 32.600006103515625 L 273.3999938964844 32.600006103515625 z" stroke-opacity="1.0" rotateAngle="0"
+                            filter="url(#pipe3D)" stroke-linejoin="round" />
+
+                        <path id="west_ctrl_arrowLine1" marker-end="url(#arrowEnd)" fill="none" stroke="black" stroke-width="2">
+                        </path>
+                        <path id="west_ctrl_arrowLine2" marker-end="url(#arrowEnd)" fill="none" stroke="black" stroke-width="2">
+                        </path>
+                        <g title="Horizontal Pump" parentid="" transform="matrix(0.75 0 0 0.75 160.75 15.75)">
+                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" title="Horizontal Pump" class="Pumps"
+                                height="106" width="154" viewBox="0 0 154 105.947" nativewidth="154" nativeheight="106" overflow="visible"
+                                myscale="1.0">
+                                <defs>
+                                    <linearGradient x1="0%" y2="0%" x2="100%" y1="0%" id="lg1_219">
+                                        <stop stop-color="#9aa1aa" offset="0" />
+                                        <stop stop-color="#aeb5c0" offset="0.22" />
+                                        <stop stop-color="#dce0e5" offset="0.57" />
+                                        <stop stop-color="#cacfd7" offset="0.84" />
+                                        <stop stop-color="#a7afb9" offset="1" />
+                                    </linearGradient>
+                                    <linearGradient x1="0%" y2="0%" x2="100%" y1="0%" id="lg2_219">
+                                        <stop stop-color="#8f969d" offset="0" />
+                                        <stop stop-color="#d3d8de" offset="0.64" />
+                                        <stop stop-color="#9aa0a8" offset="1" />
+                                    </linearGradient>
+                                    <linearGradient x1="0%" y2="0%" x2="100%" y1="0%" id="lg3_219">
+                                        <stop stop-color="#626974" offset="0" />
+                                        <stop stop-color="#ccd0d5" offset="0.66" />
+                                        <stop stop-color="#5e6670" offset="1" />
+                                    </linearGradient>
+                                    <radialGradient fy="51" r="72.6" id="rg1" cy="51" cx="51" gradientUnits="userSpaceOnUse" fx="51">
+                                        <stop stop-color="#c7cbd1" offset="0" />
+                                        <stop stop-color="#c4c7cd" offset="0.91" />
+                                        <stop stop-color="#d4d8dd" offset="0.74" />
+                                        <stop stop-color="#b6bcc4" offset="0.54" />
+                                    </radialGradient>
+                                </defs>
+                                <g transform="translate(1.01,1)">
+                                    <g transform="matrix(-1,0,0,1,74.4,31.2)">
+                                        <path transform="matrix(0,-1,-1,0,68.3,40.6)" id="shape1" fill="url(#lg1_219)" d="M0,0L39.1,0L39.1,68.3L0,68.3L0,0z" />
+                                        <path transform="matrix(0,-1,-1,0,74.4,42.9)" id="shape2" fill="url(#lg2_219)" d="M1.4,-0L41.5,-0C42.2,-0,42.9,1.3,42.9,3C42.9,4.7,42.2,6.1,41.5,6.1L1.4,6.1C.6,6.1,0,4.7,0,3C0,1.3,.6,-0,1.4,-0z"
+                                        />
+                                        <path transform="matrix(0,-1,-1,0,70.3,42.7)" id="shape3" fill="url(#lg3_219)" d="M42.5,0C42.4,1.1,41.9,1.9,41.1,1.9L1.4,1.9C.6,1.9,.1,1,0,0C0,0,42.5,0,42.5,0z"
+                                        />
+                                        <path transform="matrix(0,-1,-1,0,74.1,42.2)" id="west_ctrl_shape4" fill="#ffffff" fill-opacity="0.32" d="M.7,0L40.8,0C41.2,0,41.5,.3,41.5,.6C41.5,.9,41.2,1.1,40.8,1.1L.7,1.1C.3,1.1,0,.9,0,.6C0,.3,.3,0,.7,0z"
+                                        />
+                                    </g>
+                                    <g transform="translate(77.55,0)">
+                                        <path transform="matrix(0,-1,-1,0,68.3,40.7)" id="shape5" fill="url(#lg1_219)" d="M0,0L39.1,0L39.1,68.3L0,68.3L0,0z" />
+                                        <path transform="matrix(0,-1,-1,0,74.4,42.9)" id="shape6" fill="url(#lg2_219)" d="M1.4,-0L41.5,-0C42.2,-0,42.9,1.3,42.9,3C42.9,4.7,42.2,6.1,41.5,6.1L1.4,6.1C.6,6.1,0,4.7,0,3C0,1.3,.6,-0,1.4,-0z"
+                                        />
+                                        <path transform="matrix(0,-1,-1,0,70.3,42.7)" id="shape7" fill="url(#lg3_219)" d="M42.5,0C42.4,1.1,41.9,1.9,41.1,1.9L1.4,1.9C.6,1.9,.1,1,0,0C0,0,42.5,0,42.5,0z"
+                                        />
+                                        <path transform="matrix(0,-1,-1,0,74.1,42.2)" id="west_ctrl_shape8" fill="#ffffff" fill-opacity="0.35" d="M.7,0L40.8,0C41.2,0,41.5,.3,41.5,.6C41.5,.9,41.2,1.1,40.8,1.1L.7,1.1C.3,1.1,0,.9,0,.6C0,.3,.3,0,.7,0z"
+                                        />
+                                    </g>
+                                    <g transform="translate(26.19,1.31)">
+                                        <path transform="matrix(0,-1,-1,0,102.8,102.6)" id="shape9" fill="url(#rg1)" stroke="#d4d6db" stroke-width="0.25" d="M0,51.4C0,23,23,0,51.3,0C79.7,0,102.6,23,102.6,51.4C102.6,79.8,79.7,102.8,51.3,102.8C23,102.8,0,79.8,0,51.4z"
+                                        />
+                                        <path transform="matrix(0,-1,-1,0,94.2,94)" id="west_ctrl_shape10" fill="#ffffff" fill-opacity="0.27" d="M0,42.7C0,19.1,19.1,0,42.6,0C66.2,0,85.3,19.1,85.3,42.7C85.3,66.3,66.2,85.5,42.6,85.5C19.1,85.5,0,66.3,0,42.7z"
+                                        />
+                                        <path transform="matrix(0,-1,-1,0,85.9,93.9)" id="west_ctrl_shape11" fill="#ffffff" fill-opacity="0.13" d="M0,34.5C-0.3,13,17.1,0,17.1,0L73.1,63.9C73.1,63.9,62.3,77.3,42.6,77.3C19.1,77.3,0,58.1,0,34.5z"
+                                        />
+                                    </g>
+                                </g>
+                            </svg>
+                            <rect width="154" height="106" stroke="none" stroke-width="2" fill="white" fill-opacity="0" style="cursor: default;" />
+                        </g>
+                    </g>
+                </g>
+
+
+
+                <defs id="pipe3dDefs">
+                    <filter id="pipe3D">
+                        <feFlood flood-color="black" />
+                        <feComposite operator="out" in2="SourceGraphic" />
+                        <feGaussianBlur stdDeviation="6" />
+                        <feComposite operator="atop" in2="SourceGraphic" />
+                    </filter>
+                </defs>
+                <text id="west_ctrl_Impeller" x="220" y="48" text-anchor="middle" font-family="Arial Unicode MS" font-size="80" dy="36" stroke-width="2"
+                    fill="green" stroke="black">&#x002B</text>
+            </svg>
+        </div>
+        <center>
+            <h2>East Pond Control</h2>
+            <button class="pausebtn" id="east_ctrl">Stop Pump</button>
+        </center>
+        <div class="east_ctrl" style="background-color:white;width:600px;height:200px;">
+
+            <svg xmlns="http://www.w3.org/2000/svg" id="mySVG" width="400" height="400" viewBox="0 0 400 400" style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                <style xmlns="http://www.w3.org/1999/xhtml"></style>
+                <defs xmlns="http://www.w3.org/1999/xhtml"></defs>
+
+                <defs id="arrowDefs">
+                    <marker id="arrowEnd" viewBox="0 0 8000 8000" refX="280" refY="150" markerUnits="strokeWidth" markerWidth="300" markerHeight="300"
+                        orient="auto" fill="black" stroke-linejoin="bevel">
+                        <path id="arrowEndPath" stroke="RGB(0,0,0)" stroke-width="5" d="M2 59,293 148,1 243,121 151,Z">
+                        </path>
+                    </marker>
+                </defs>
+                <g id="publishG">
+
+                    <g id="publishElemG" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+                        <path fill="none" id="east_ctrl_pipe" fill-opacity="1.0" stroke="#7CFC00" stroke-width="25" d="M 163.40000915527344 55.600006103515625 L 79.40000915527344 54.600006103515625 L 79.40000915527344 147.60000610351562 L 334.3999938964844 149.60000610351562 
+                    L 333.3999938964844 32.600006103515625 L 273.3999938964844 32.600006103515625 z" stroke-opacity="1.0"
+                            rotateAngle="0" filter="url(#pipe3D)" stroke-linejoin="round" />
+
+                        <path id="east_ctrl_arrowLine1" marker-end="url(#arrowEnd)" fill="none" stroke="black" stroke-width="2">
+                        </path>
+                        <path id="east_ctrl_arrowLine2" marker-end="url(#arrowEnd)" fill="none" stroke="black" stroke-width="2">
+                        </path>
+                        <g title="Horizontal Pump" parentid="" transform="matrix(0.75 0 0 0.75 160.75 15.75)">
+                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" title="Horizontal Pump" class="Pumps"
+                                height="106" width="154" viewBox="0 0 154 105.947" nativewidth="154" nativeheight="106" overflow="visible"
+                                myscale="1.0">
+                                <defs>
+                                    <linearGradient x1="0%" y2="0%" x2="100%" y1="0%" id="lg1_219">
+                                        <stop stop-color="#9aa1aa" offset="0" />
+                                        <stop stop-color="#aeb5c0" offset="0.22" />
+                                        <stop stop-color="#dce0e5" offset="0.57" />
+                                        <stop stop-color="#cacfd7" offset="0.84" />
+                                        <stop stop-color="#a7afb9" offset="1" />
+                                    </linearGradient>
+                                    <linearGradient x1="0%" y2="0%" x2="100%" y1="0%" id="lg2_219">
+                                        <stop stop-color="#8f969d" offset="0" />
+                                        <stop stop-color="#d3d8de" offset="0.64" />
+                                        <stop stop-color="#9aa0a8" offset="1" />
+                                    </linearGradient>
+                                    <linearGradient x1="0%" y2="0%" x2="100%" y1="0%" id="lg3_219">
+                                        <stop stop-color="#626974" offset="0" />
+                                        <stop stop-color="#ccd0d5" offset="0.66" />
+                                        <stop stop-color="#5e6670" offset="1" />
+                                    </linearGradient>
+                                    <radialGradient fy="51" r="72.6" id="rg1" cy="51" cx="51" gradientUnits="userSpaceOnUse" fx="51">
+                                        <stop stop-color="#c7cbd1" offset="0" />
+                                        <stop stop-color="#c4c7cd" offset="0.91" />
+                                        <stop stop-color="#d4d8dd" offset="0.74" />
+                                        <stop stop-color="#b6bcc4" offset="0.54" />
+                                    </radialGradient>
+                                </defs>
+                                <g transform="translate(1.01,1)">
+                                    <g transform="matrix(-1,0,0,1,74.4,31.2)">
+                                        <path transform="matrix(0,-1,-1,0,68.3,40.6)" id="shape1" fill="url(#lg1_219)" d="M0,0L39.1,0L39.1,68.3L0,68.3L0,0z" />
+                                        <path transform="matrix(0,-1,-1,0,74.4,42.9)" id="shape2" fill="url(#lg2_219)" d="M1.4,-0L41.5,-0C42.2,-0,42.9,1.3,42.9,3C42.9,4.7,42.2,6.1,41.5,6.1L1.4,6.1C.6,6.1,0,4.7,0,3C0,1.3,.6,-0,1.4,-0z"
+                                        />
+                                        <path transform="matrix(0,-1,-1,0,70.3,42.7)" id="shape3" fill="url(#lg3_219)" d="M42.5,0C42.4,1.1,41.9,1.9,41.1,1.9L1.4,1.9C.6,1.9,.1,1,0,0C0,0,42.5,0,42.5,0z"
+                                        />
+                                        <path transform="matrix(0,-1,-1,0,74.1,42.2)" id="east_ctrl_shape4" fill="#ffffff" fill-opacity="0.32" d="M.7,0L40.8,0C41.2,0,41.5,.3,41.5,.6C41.5,.9,41.2,1.1,40.8,1.1L.7,1.1C.3,1.1,0,.9,0,.6C0,.3,.3,0,.7,0z"
+                                        />
+                                    </g>
+                                    <g transform="translate(77.55,0)">
+                                        <path transform="matrix(0,-1,-1,0,68.3,40.7)" id="shape5" fill="url(#lg1_219)" d="M0,0L39.1,0L39.1,68.3L0,68.3L0,0z" />
+                                        <path transform="matrix(0,-1,-1,0,74.4,42.9)" id="shape6" fill="url(#lg2_219)" d="M1.4,-0L41.5,-0C42.2,-0,42.9,1.3,42.9,3C42.9,4.7,42.2,6.1,41.5,6.1L1.4,6.1C.6,6.1,0,4.7,0,3C0,1.3,.6,-0,1.4,-0z"
+                                        />
+                                        <path transform="matrix(0,-1,-1,0,70.3,42.7)" id="shape7" fill="url(#lg3_219)" d="M42.5,0C42.4,1.1,41.9,1.9,41.1,1.9L1.4,1.9C.6,1.9,.1,1,0,0C0,0,42.5,0,42.5,0z"
+                                        />
+                                        <path transform="matrix(0,-1,-1,0,74.1,42.2)" id="east_ctrl_shape8" fill="#ffffff" fill-opacity="0.35" d="M.7,0L40.8,0C41.2,0,41.5,.3,41.5,.6C41.5,.9,41.2,1.1,40.8,1.1L.7,1.1C.3,1.1,0,.9,0,.6C0,.3,.3,0,.7,0z"
+                                        />
+                                    </g>
+                                    <g transform="translate(26.19,1.31)">
+                                        <path transform="matrix(0,-1,-1,0,102.8,102.6)" id="shape9" fill="url(#rg1)" stroke="#d4d6db" stroke-width="0.25" d="M0,51.4C0,23,23,0,51.3,0C79.7,0,102.6,23,102.6,51.4C102.6,79.8,79.7,102.8,51.3,102.8C23,102.8,0,79.8,0,51.4z"
+                                        />
+                                        <path transform="matrix(0,-1,-1,0,94.2,94)" id="east_ctrl_shape10" fill="#ffffff" fill-opacity="0.27" d="M0,42.7C0,19.1,19.1,0,42.6,0C66.2,0,85.3,19.1,85.3,42.7C85.3,66.3,66.2,85.5,42.6,85.5C19.1,85.5,0,66.3,0,42.7z"
+                                        />
+                                        <path transform="matrix(0,-1,-1,0,85.9,93.9)" id="east_ctrl_shape11" fill="#ffffff" fill-opacity="0.13" d="M0,34.5C-0.3,13,17.1,0,17.1,0L73.1,63.9C73.1,63.9,62.3,77.3,42.6,77.3C19.1,77.3,0,58.1,0,34.5z"
+                                        />
+                                    </g>
+                                </g>
+                            </svg>
+                            <rect width="154" height="106" stroke="none" stroke-width="2" fill="white" fill-opacity="0" style="cursor: default;" />
+                        </g>
+                    </g>
+                </g>
+
+
+
+                <defs id="pipe3dDefs">
+                    <filter id="pipe3D">
+                        <feFlood flood-color="black" />
+                        <feComposite operator="out" in2="SourceGraphic" />
+                        <feGaussianBlur stdDeviation="6" />
+                        <feComposite operator="atop" in2="SourceGraphic" />
+                    </filter>
+                </defs>
+                <text id="east_ctrl_Impeller" x="220" y="48" text-anchor="middle" font-family="Arial Unicode MS" font-size="80" dy="36" stroke-width="2"
+                    fill="green" stroke="black">&#x002B</text>
+            </svg>
+        </div>
+    </center>
+    <script id="myScript">
+
+
+        var west_ctrl_Animation;   //---onload:  west_ctrl_Animation=SVG.adopt(pipe)  ---
+        var east_ctrl_Animation;
+        function runArrows(ctrl) {
+            var duration = 4000
+            var rotateAngle = 360
+            var pipe = window[ctrl + "_pipe"];
+            var pathLength = pipe.getTotalLength() - 25
+            var arrow2Offset = pipe.getTotalLength() * .33
+
+            window[ctrl + "_Animation"].animate(duration).during(
+                function (pos) //---setter--
+                {
+                    var length = pathLength * pos
+                    var Pnt0 = pipe.getPointAtLength(length) //--start
+                    var Pnt1 = pipe.getPointAtLength(length + 20) //--mid---
+                    var Pnt2 = pipe.getPointAtLength(length + 40) //---end---
+                    var d = "M" + [Pnt0.x, Pnt0.y, Pnt1.x, Pnt1.y, Pnt2.x, Pnt2.y].toString()
+                    window[ctrl + "_arrowLine1"].setAttribute("d", d)
+
+                    if (length <= (pathLength - arrow2Offset)) {
+                        var Pnt0 = pipe.getPointAtLength(length + arrow2Offset) //--start
+                        var Pnt1 = pipe.getPointAtLength(length + 20 + arrow2Offset) //--mid---
+                        var Pnt2 = pipe.getPointAtLength(length + 40 + arrow2Offset) //---end---
+                        var d = "M" + [Pnt0.x, Pnt0.y, Pnt1.x, Pnt1.y, Pnt2.x, Pnt2.y].toString()
+                        window[ctrl + "_arrowLine2"].setAttribute("d", d)
+                    }
+                    else if (length > (pathLength - arrow2Offset)) {
+                        var myLength = length - arrow2Offset
+                        var Pnt0 = pipe.getPointAtLength(myLength - arrow2Offset) //--start
+                        var Pnt1 = pipe.getPointAtLength(myLength + 20 - arrow2Offset) //--mid---
+                        var Pnt2 = pipe.getPointAtLength(myLength + 40 - arrow2Offset) //---end---
+                        var d = "M" + [Pnt0.x, Pnt0.y, Pnt1.x, Pnt1.y, Pnt2.x, Pnt2.y].toString()
+                        window[ctrl + "_arrowLine2"].setAttribute("d", d)
+                    }
+                    window[ctrl + "_Impeller"].setAttribute("transform", "rotate(" + (-rotateAngle * pos) + " " + w_cx + " " + w_cy + " )")
+
+
+                })
+                .after(function () {
+                    runArrows(ctrl)
+                })
+        }
+
+        function pausePlayButtonClicked(self) {
+            console.log(self);
+            var ctrl = self.target.id; //ctrl is equal to "west_ctrl" or "east_ctrl".
+            if (self.target.innerHTML == "Stop Pump") {
+                console.log(this);
+                window[ctrl + "_Animation"].pause()
+                self.target.innerHTML = "Start Pump"
+                window[ctrl + "_Impeller"].setAttribute("fill", "crimson")
+                window[ctrl + "_shape4"].setAttribute("fill", "crimson")
+                window[ctrl + "_shape8"].setAttribute("fill", "crimson")
+                window[ctrl + "_shape10"].setAttribute("fill", "crimson")
+                window[ctrl + "_shape11"].setAttribute("fill", "crimson")
+                window[ctrl + "_pipe"].setAttribute("stroke", "#ff4500")
+            }
+            else {
+                window[ctrl + "_Animation"].play()
+                self.target.innerHTML = "Stop Pump"
+                window[ctrl + "_Impeller"].setAttribute("fill", "green")
+                window[ctrl + "_shape4"].setAttribute("fill", "white")
+                window[ctrl + "_shape8"].setAttribute("fill", "white")
+                window[ctrl + "_shape10"].setAttribute("fill", "white")
+                window[ctrl + "_shape11"].setAttribute("fill", "white")
+                window[ctrl + "_pipe"].setAttribute("stroke", "#7CFC00")
+            }
+        }
+
+
+
+        //==============Impeller==============
+        //--onload---
+        //---impeller rotate center point---
+        var w_cx;
+        var w_cy;
+        function placeAsImpeller() {
+
+            // var fontSize = 80;
+            // // var unicode="273D";
+            // var unicode = "002B"
+            // var code = parseInt(unicode, 16);
+            // var icon = d3.select("#mySVG").append("text")
+            //     .attr("id", "west_ctrl_Impeller")
+            //     .attr("x", 220)
+            //     .attr("y", 48)
+            //     .attr("text-anchor", "middle")
+            //     .attr("font-size", fontSize)
+            //     .attr("font-family", "Arial Unicode MS")
+            //     .attr("dy", fontSize / 2 - 4)
+            //     .attr("stroke-width", 2)
+            //     .attr("fill", "green")
+            //     .attr("stroke", "black")
+            //     .text(String.fromCharCode(code));
+            // // ---get rotate center point---
+
+            var bb = west_ctrl_Impeller.getBBox();
+            w_cx = bb.x + .5 * bb.width;
+            w_cy = bb.y + .5 * bb.height + 1;
+        }
+
+
+    </script>
+    <script>
+        document.addEventListener("onload", init(), false)
+        function init() {
+
+            for (const btn of document.getElementsByClassName("pausebtn")) {
+                btn.addEventListener('click', pausePlayButtonClicked);
+            }
+
+            placeAsImpeller();
+            west_ctrl_Animation = SVG.adopt(west_ctrl_pipe);
+            east_ctrl_Animation = SVG.adopt(east_ctrl_pipe);
+            for (const btn of document.getElementsByClassName("pausebtn")) {
+                runArrows(btn.id);
+            }
+        }
+    </script>
