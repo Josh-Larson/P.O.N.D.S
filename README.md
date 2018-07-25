@@ -19,4 +19,4 @@ Statuses include "On" and "Off" along with an HMI webserver which is used to
 display the current fountain information, along with pump control functions.  
 
 
-DISCLAIMER: Do not use for real world production products. System is intenionally flawed. 
+DISCLAIMER: Do not use for real world production products. System is intentionally flawed. 
