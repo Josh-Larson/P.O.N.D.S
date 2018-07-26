@@ -4,8 +4,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>2 Animate Flow Arrow</title>
-    <script type="text/javascript" src="./web_assets/js/svg.min.js"></script>
-    <script type="text/javascript" src="./web_assets/js/d3.v4.min.js"></script>
+    <script type="text/javascript" src="../js/svg.min.js"></script>
+    <script type="text/javascript" src="../js/d3.v4.min.js"></script>
 
 
 </head>
@@ -307,25 +307,6 @@
         var w_cx;
         var w_cy;
         function placeAsImpeller() {
-
-            // var fontSize = 80;
-            // // var unicode="273D";
-            // var unicode = "002B"
-            // var code = parseInt(unicode, 16);
-            // var icon = d3.select("#mySVG").append("text")
-            //     .attr("id", "west_ctrl_Impeller")
-            //     .attr("x", 220)
-            //     .attr("y", 48)
-            //     .attr("text-anchor", "middle")
-            //     .attr("font-size", fontSize)
-            //     .attr("font-family", "Arial Unicode MS")
-            //     .attr("dy", fontSize / 2 - 4)
-            //     .attr("stroke-width", 2)
-            //     .attr("fill", "green")
-            //     .attr("stroke", "black")
-            //     .text(String.fromCharCode(code));
-            // // ---get rotate center point---
-
             var bb = west_ctrl_Impeller.getBBox();
             w_cx = bb.x + .5 * bb.width;
             w_cy = bb.y + .5 * bb.height + 1;
@@ -346,6 +327,7 @@
             east_ctrl_Animation = SVG.adopt(east_ctrl_pipe);
             for (const btn of document.getElementsByClassName("pausebtn")) {
                 runArrows(btn.id);
+                btn.click()
             }
         }
     </script>
