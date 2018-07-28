@@ -25,13 +25,11 @@ async def hello():
         while True:
             msg = await CENTRAL_SERVER.recv()
             msg = json.loads(msg)
-            print("Incoming message")
             print(msg)
             if msg['msgtype'] == "set_flow":
                 flow_value = msg['flow_value']
                 #API.setPumpStatus(API CALL HERE TO SET THE PUMP)
                 await CENTRAL_SERVER.send(json.dumps({'cmd':'update_clients', 'user':USER_NAME, 'token':TOKEN, 'flow_value':flow_value}))
-                print("Message sent")
         CENTRAL_SERVER.close()
 
 asyncio.get_event_loop().run_until_complete(hello())

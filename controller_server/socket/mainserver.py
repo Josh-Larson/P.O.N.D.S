@@ -23,6 +23,7 @@ async def client_login(msg, websocket):
 #This function takes a username and pword as input, outputs a session token. 
 #Used to authenticate the pi's 
 async def pi_login(msg, websocket):
+    #TODO, check for these vals in dict to prevent keyError. 
     user, password = msg['user'], msg['pass']
 
     if  password=="secret":
@@ -32,8 +33,13 @@ async def pi_login(msg, websocket):
 
 #This function, initiated by a web client, sets the flow status of a particular pump
 async def set_flow(msg, websocket):
+    #TODO check for these vals in dict to prevent keyError. 
     target, flow_value, token = msg['target'], msg['flow_value'], msg['token']
-    if target in pi_clients and token in web_clients:
+
+    if target not in pi_clients:
+        await websocket.send(json.dumps({'msgtype': 'error', 'msg': 'Error: target is offline'}))
+        return 
+    if token in web_clients:
         #Below cmd vulnerable to replay
         await pi_clients[target][0].send(json.dumps({'msgtype':'set_flow', 'flow_value':flow_value}))
     else:
@@ -41,17 +47,17 @@ async def set_flow(msg, websocket):
 
 #This function, when authenticated, pushes the stauts of all fountains to all connected web clients
 async def update_clients(msg, websocket):
-
+    #TODO, check for these vals in dict to prevent keyError. 
     user, token = msg['user'], msg['token']
     POND_STATUS[user] = msg['flow_value']
-    print("UPDATING CLIENTS")
+    #end check
+
+
     if user in pi_clients and pi_clients[user][1] == token:
         #If web clients are connected.
         if web_clients:
             #Below cmd vulnerable to replay
             await asyncio.wait([web_clients[k].send(json.dumps({'msgtype':'update','POND_STATUS':POND_STATUS})) for k in web_clients])
-            
-        print("EXITING UPDATE")
     else:
         await websocket.send(json.dumps({'msgtype': 'error', 'msg': 'Login failed.'}))
 
