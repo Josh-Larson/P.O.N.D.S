@@ -7,7 +7,8 @@ import websockets
 
 pi_clients= {}
 web_clients = {}
-POND_STATUS = {'pondPiEast': "pending", 'pondPiWest':"pending"}
+POND_STATUS = {'pondPiEast': "noconn", 'pondPiWest':"noconn"} 
+
 
 
 #This funciton takes a password as input, and outputs a session token.
@@ -20,6 +21,9 @@ async def client_login(msg, websocket):
         #Push flow status to client right after client-login.
         #Remove from client map after x seconds?
 
+
+
+
 #This function takes a username and pword as input, outputs a session token. 
 #Used to authenticate the pi's 
 async def pi_login(msg, websocket):
@@ -31,35 +35,51 @@ async def pi_login(msg, websocket):
         pi_clients[user] = (websocket,token)
         await websocket.send(json.dumps({'msgtype': 'notify', 'login': 'true', 'token':token }))
 
-#This function, initiated by a web client, sets the flow status of a particular pump
+
+
+
+
+#set_flow: This function, initiated by a web client, s
+#sets the flow status of a particular pump.
 async def set_flow(msg, websocket):
-    #TODO check for these vals in dict to prevent keyError. 
+    #Prevents valid command. 
+    if any(i not in msg for i in ['target','flow_value','token']):
+        await sendError(websocket, 'Error: Malformed command.')
+        return
+
     target, flow_value, token = msg['target'], msg['flow_value'], msg['token']
 
     if target not in pi_clients:
-        await websocket.send(json.dumps({'msgtype': 'error', 'msg': 'Error: target is offline'}))
+        await sendError(websocket, 'Error: Target is offline')
         return 
     if token in web_clients:
         #Below cmd vulnerable to replay
-        await pi_clients[target][0].send(json.dumps({'msgtype':'set_flow', 'flow_value':flow_value}))
+        await pi_clients[target][0].send(json.dumps({'msgtype':'cmd', 'cmd':'set_flow', 'flow_value':flow_value}))
     else:
-        await websocket.send(json.dumps({'msgtype': 'error', 'msg': 'Login failed. Incorrect token.'}))
+        await sendError(websocket, 'Error: Login failed, incorrect token.')
+
+
+
+
+
 
 #This function, when authenticated, pushes the stauts of all fountains to all connected web clients
 async def update_clients(msg, websocket):
-    #TODO, check for these vals in dict to prevent keyError. 
+    #Check for these vals in dict to prevent keyError. IF it is missing. 
+    if any(i not in msg for i in ['user','token','flow_value']) :
+        await sendError(websocket, 'Error: Malformed command.')
+        return
     user, token = msg['user'], msg['token']
     POND_STATUS[user] = msg['flow_value']
-    #end check
 
-
+    #Authentication. if user and token is valid. 
     if user in pi_clients and pi_clients[user][1] == token:
         #If web clients are connected.
         if web_clients:
-            #Below cmd vulnerable to replay
-            await asyncio.wait([web_clients[k].send(json.dumps({'msgtype':'update','POND_STATUS':POND_STATUS})) for k in web_clients])
+            #Warning: Below cmd vulnerable to replay
+            await asyncio.wait([web_clients[k].send(json.dumps({'msgtype':'cmd', 'cmd':'update','POND_STATUS':POND_STATUS})) for k in web_clients])
     else:
-        await websocket.send(json.dumps({'msgtype': 'error', 'msg': 'Login failed.'}))
+        await sendError(websocket, 'Error: Login failed.')
 
 #A dictionary of available functions 
 switcher = {
@@ -78,7 +98,15 @@ async def handler(websocket, path):
         await switcher[msg['cmd']](msg, websocket)
 
 
-start_server = websockets.serve(handler, 'localhost', 8765)
+###MISC Functions:
 
+async def sendError(websocket, msg):
+    await websocket.send(json.dumps({'msgtype': 'error', 'msg':msg}))
+    return 
+
+
+
+#Starts the websocket server
+start_server = websockets.serve(handler, 'localhost', 8765)
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
