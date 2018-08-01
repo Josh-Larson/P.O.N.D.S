@@ -4,8 +4,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>2 Animate Flow Arrow</title>
-    <script type="text/javascript" src="./web_assets/js/svg.min.js"></script>
-    <script type="text/javascript" src="./web_assets/js/d3.v4.min.js"></script>
+    <script type="text/javascript" src="../js/svg.min.js"></script>
+    <script type="text/javascript" src="../js/d3.v4.min.js"></script>
 
 
 </head>
@@ -22,7 +22,7 @@
         <a href="http://svgjs.com/">SVG.js</a> and D3.
 
 
-        <div class="west_ctrl" style="background-color:white;width:600px;height:200px;">
+        <div class="west_ctrl_div" style="background-color:white;width:600px;height:200px;">
             <svg xmlns="http://www.w3.org/2000/svg" id="mySVG" width="400" height="400" viewBox="0 0 400 400" style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
                 <style xmlns="http://www.w3.org/1999/xhtml"></style>
                 <defs xmlns="http://www.w3.org/1999/xhtml"></defs>
@@ -125,7 +125,7 @@
             <h2>East Pond Control</h2>
             <button class="pausebtn" id="east_ctrl">Stop Pump</button>
         </center>
-        <div class="east_ctrl" style="background-color:white;width:600px;height:200px;">
+        <div class="east_ctrl_div" style="background-color:white;width:600px;height:200px;">
 
             <svg xmlns="http://www.w3.org/2000/svg" id="mySVG" width="400" height="400" viewBox="0 0 400 400" style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
                 <style xmlns="http://www.w3.org/1999/xhtml"></style>
@@ -228,8 +228,15 @@
         </div>
     </center>
     <script id="myScript">
+        var ws = new WebSocket("ws://127.0.0.1:8765/");
+            var TOKEN = null;
+            ws.onopen = function(event){
+                ws.send(JSON.stringify({cmd:"client_login", pass:"secret"}))
+            }
+        
 
 
+        // ===========ANIMATION CODE===================
         var west_ctrl_Animation;   //---onload:  west_ctrl_Animation=SVG.adopt(pipe)  ---
         var east_ctrl_Animation;
         function runArrows(ctrl) {
@@ -273,32 +280,44 @@
                 })
         }
 
-        function pausePlayButtonClicked(self) {
-            console.log(self);
-            var ctrl = self.target.id; //ctrl is equal to "west_ctrl" or "east_ctrl".
-            if (self.target.innerHTML == "Stop Pump") {
-                console.log(this);
-                window[ctrl + "_Animation"].pause()
-                self.target.innerHTML = "Start Pump"
-                window[ctrl + "_Impeller"].setAttribute("fill", "crimson")
-                window[ctrl + "_shape4"].setAttribute("fill", "crimson")
-                window[ctrl + "_shape8"].setAttribute("fill", "crimson")
-                window[ctrl + "_shape10"].setAttribute("fill", "crimson")
-                window[ctrl + "_shape11"].setAttribute("fill", "crimson")
-                window[ctrl + "_pipe"].setAttribute("stroke", "#ff4500")
-            }
-            else {
-                window[ctrl + "_Animation"].play()
-                self.target.innerHTML = "Stop Pump"
-                window[ctrl + "_Impeller"].setAttribute("fill", "green")
-                window[ctrl + "_shape4"].setAttribute("fill", "white")
-                window[ctrl + "_shape8"].setAttribute("fill", "white")
-                window[ctrl + "_shape10"].setAttribute("fill", "white")
-                window[ctrl + "_shape11"].setAttribute("fill", "white")
-                window[ctrl + "_pipe"].setAttribute("stroke", "#7CFC00")
-            }
-        }
+        function updateAnimation(status) {
+            console.log(status);
+            status["east_ctrl"] =  status["pondPiEast"];
+            status["west_ctrl"] = status["pondPiWest"];
 
+            ["east_ctrl", "west_ctrl"].forEach((pond) =>{
+                switch(status[pond]){
+                    case "true": 
+                    window[pond + "_Animation"].play()
+                    document.getElementById(pond).innerHTML = "Stop Pump"
+                    window[pond + "_Impeller"].setAttribute("fill", "green")
+                    window[pond + "_shape4"].setAttribute("fill", "white")
+                    window[pond + "_shape8"].setAttribute("fill", "white")
+                    window[pond + "_shape10"].setAttribute("fill", "white")
+                    window[pond + "_shape11"].setAttribute("fill", "white")
+                    window[pond + "_pipe"].setAttribute("stroke", "#7CFC00")
+                    break;
+                    default:
+                    window[pond + "_Animation"].pause()
+                    document.getElementById(pond).innerHTML = "Start Pump"
+                    window[pond + "_Impeller"].setAttribute("fill", "crimson")
+                    window[pond + "_shape4"].setAttribute("fill", "crimson")
+                    window[pond + "_shape8"].setAttribute("fill", "crimson")
+                    window[pond + "_shape10"].setAttribute("fill", "crimson")
+                    window[pond + "_shape11"].setAttribute("fill", "crimson")
+                    window[pond + "_pipe"].setAttribute("stroke", "#ff4500")
+
+                }
+        });
+    }
+        
+        var set_flow = function(self){
+            console.log(self);
+            var target = (self.target.id == "west_ctrl") ? "pondPiWest":"pondPiEast";
+            var flow_value = (self.target.innerHTML == "Stop Pump") ? "false":"true";
+            ws.send(JSON.stringify({msgtype:"cmd", cmd:"set_flow", target: target, flow_value:flow_value, token:TOKEN}))
+            return
+        }
 
 
         //==============Impeller==============
@@ -307,29 +326,38 @@
         var w_cx;
         var w_cy;
         function placeAsImpeller() {
-
-            // var fontSize = 80;
-            // // var unicode="273D";
-            // var unicode = "002B"
-            // var code = parseInt(unicode, 16);
-            // var icon = d3.select("#mySVG").append("text")
-            //     .attr("id", "west_ctrl_Impeller")
-            //     .attr("x", 220)
-            //     .attr("y", 48)
-            //     .attr("text-anchor", "middle")
-            //     .attr("font-size", fontSize)
-            //     .attr("font-family", "Arial Unicode MS")
-            //     .attr("dy", fontSize / 2 - 4)
-            //     .attr("stroke-width", 2)
-            //     .attr("fill", "green")
-            //     .attr("stroke", "black")
-            //     .text(String.fromCharCode(code));
-            // // ---get rotate center point---
-
             var bb = west_ctrl_Impeller.getBBox();
             w_cx = bb.x + .5 * bb.width;
             w_cy = bb.y + .5 * bb.height + 1;
         }
+
+        
+
+        //============Websocket Code============
+
+            ws.onmessage = function (event) {
+                var msg = JSON.parse(event.data)
+
+                console.log(msg);
+
+                if(msg['msgtype']=="notify" && 'login' in msg){
+                    TOKEN = msg['token'];
+                    updateAnimation(msg['POND_STATUS'])
+                }else if( msg['msgtype'] == "cmd" && msg['cmd']=='update'){
+                    updateAnimation(msg['POND_STATUS'])
+                    console.log(msg["POND_STATUS"]);
+                }
+
+            };
+            
+            var send_flow = function(event){
+                if(TOKEN == null) return;
+                ws.send(JSON.stringify({cmd:"set_flow", token:TOKEN, target:"pondPiEast", flow_value:"true"}))
+            }
+
+            //document.getElementById("test").onclick = send_flow;
+
+
 
 
     </script>
@@ -338,14 +366,16 @@
         function init() {
 
             for (const btn of document.getElementsByClassName("pausebtn")) {
-                btn.addEventListener('click', pausePlayButtonClicked);
+                btn.addEventListener('click', set_flow);
             }
-
+            
             placeAsImpeller();
+
             west_ctrl_Animation = SVG.adopt(west_ctrl_pipe);
             east_ctrl_Animation = SVG.adopt(east_ctrl_pipe);
             for (const btn of document.getElementsByClassName("pausebtn")) {
                 runArrows(btn.id);
             }
+            updateAnimation({"pondPiEast": "false", "pondPiWest":"false" });
         }
     </script>
