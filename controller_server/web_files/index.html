@@ -4,8 +4,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>2 Animate Flow Arrow</title>
-    <script type="text/javascript" src="../js/svg.min.js"></script>
-    <script type="text/javascript" src="../js/d3.v4.min.js"></script>
+    <script type="text/javascript" src="./js/svg.min.js"></script>
+    <script type="text/javascript" src="./js/d3.v4.min.js"></script>
 
 
 </head>
@@ -227,155 +227,8 @@
             </svg>
         </div>
     </center>
-    <script id="myScript">
-        var ws = new WebSocket("ws://127.0.0.1:8765/");
-            var TOKEN = null;
-            ws.onopen = function(event){
-                ws.send(JSON.stringify({cmd:"client_login", pass:"secret"}))
-            }
-        
+</body>
+<script type="text/javascript" src="./js/socket_communicator.js"></script>
+<script type="text/javascript" src="./js/pump_animator.js"></script>
 
-
-        // ===========ANIMATION CODE===================
-        var west_ctrl_Animation;   //---onload:  west_ctrl_Animation=SVG.adopt(pipe)  ---
-        var east_ctrl_Animation;
-        function runArrows(ctrl) {
-            var duration = 4000
-            var rotateAngle = 360
-            var pipe = window[ctrl + "_pipe"];
-            var pathLength = pipe.getTotalLength() - 25
-            var arrow2Offset = pipe.getTotalLength() * .33
-
-            window[ctrl + "_Animation"].animate(duration).during(
-                function (pos) //---setter--
-                {
-                    var length = pathLength * pos
-                    var Pnt0 = pipe.getPointAtLength(length) //--start
-                    var Pnt1 = pipe.getPointAtLength(length + 20) //--mid---
-                    var Pnt2 = pipe.getPointAtLength(length + 40) //---end---
-                    var d = "M" + [Pnt0.x, Pnt0.y, Pnt1.x, Pnt1.y, Pnt2.x, Pnt2.y].toString()
-                    window[ctrl + "_arrowLine1"].setAttribute("d", d)
-
-                    if (length <= (pathLength - arrow2Offset)) {
-                        var Pnt0 = pipe.getPointAtLength(length + arrow2Offset) //--start
-                        var Pnt1 = pipe.getPointAtLength(length + 20 + arrow2Offset) //--mid---
-                        var Pnt2 = pipe.getPointAtLength(length + 40 + arrow2Offset) //---end---
-                        var d = "M" + [Pnt0.x, Pnt0.y, Pnt1.x, Pnt1.y, Pnt2.x, Pnt2.y].toString()
-                        window[ctrl + "_arrowLine2"].setAttribute("d", d)
-                    }
-                    else if (length > (pathLength - arrow2Offset)) {
-                        var myLength = length - arrow2Offset
-                        var Pnt0 = pipe.getPointAtLength(myLength - arrow2Offset) //--start
-                        var Pnt1 = pipe.getPointAtLength(myLength + 20 - arrow2Offset) //--mid---
-                        var Pnt2 = pipe.getPointAtLength(myLength + 40 - arrow2Offset) //---end---
-                        var d = "M" + [Pnt0.x, Pnt0.y, Pnt1.x, Pnt1.y, Pnt2.x, Pnt2.y].toString()
-                        window[ctrl + "_arrowLine2"].setAttribute("d", d)
-                    }
-                    window[ctrl + "_Impeller"].setAttribute("transform", "rotate(" + (-rotateAngle * pos) + " " + w_cx + " " + w_cy + " )")
-
-
-                })
-                .after(function () {
-                    runArrows(ctrl)
-                })
-        }
-
-        function updateAnimation(status) {
-            console.log(status);
-            status["east_ctrl"] =  status["pondPiEast"];
-            status["west_ctrl"] = status["pondPiWest"];
-
-            ["east_ctrl", "west_ctrl"].forEach((pond) =>{
-                switch(status[pond]){
-                    case "true": 
-                    window[pond + "_Animation"].play()
-                    document.getElementById(pond).innerHTML = "Stop Pump"
-                    window[pond + "_Impeller"].setAttribute("fill", "green")
-                    window[pond + "_shape4"].setAttribute("fill", "white")
-                    window[pond + "_shape8"].setAttribute("fill", "white")
-                    window[pond + "_shape10"].setAttribute("fill", "white")
-                    window[pond + "_shape11"].setAttribute("fill", "white")
-                    window[pond + "_pipe"].setAttribute("stroke", "#7CFC00")
-                    break;
-                    default:
-                    window[pond + "_Animation"].pause()
-                    document.getElementById(pond).innerHTML = "Start Pump"
-                    window[pond + "_Impeller"].setAttribute("fill", "crimson")
-                    window[pond + "_shape4"].setAttribute("fill", "crimson")
-                    window[pond + "_shape8"].setAttribute("fill", "crimson")
-                    window[pond + "_shape10"].setAttribute("fill", "crimson")
-                    window[pond + "_shape11"].setAttribute("fill", "crimson")
-                    window[pond + "_pipe"].setAttribute("stroke", "#ff4500")
-
-                }
-        });
-    }
-        
-        var set_flow = function(self){
-            console.log(self);
-            var target = (self.target.id == "west_ctrl") ? "pondPiWest":"pondPiEast";
-            var flow_value = (self.target.innerHTML == "Stop Pump") ? "false":"true";
-            ws.send(JSON.stringify({msgtype:"cmd", cmd:"set_flow", target: target, flow_value:flow_value, token:TOKEN}))
-            return
-        }
-
-
-        //==============Impeller==============
-        //--onload---
-        //---impeller rotate center point---
-        var w_cx;
-        var w_cy;
-        function placeAsImpeller() {
-            var bb = west_ctrl_Impeller.getBBox();
-            w_cx = bb.x + .5 * bb.width;
-            w_cy = bb.y + .5 * bb.height + 1;
-        }
-
-        
-
-        //============Websocket Code============
-
-            ws.onmessage = function (event) {
-                var msg = JSON.parse(event.data)
-
-                console.log(msg);
-
-                if(msg['msgtype']=="notify" && 'login' in msg){
-                    TOKEN = msg['token'];
-                    updateAnimation(msg['POND_STATUS'])
-                }else if( msg['msgtype'] == "cmd" && msg['cmd']=='update'){
-                    updateAnimation(msg['POND_STATUS'])
-                    console.log(msg["POND_STATUS"]);
-                }
-
-            };
-            
-            var send_flow = function(event){
-                if(TOKEN == null) return;
-                ws.send(JSON.stringify({cmd:"set_flow", token:TOKEN, target:"pondPiEast", flow_value:"true"}))
-            }
-
-            //document.getElementById("test").onclick = send_flow;
-
-
-
-
-    </script>
-    <script>
-        document.addEventListener("onload", init(), false)
-        function init() {
-
-            for (const btn of document.getElementsByClassName("pausebtn")) {
-                btn.addEventListener('click', set_flow);
-            }
-            
-            placeAsImpeller();
-
-            west_ctrl_Animation = SVG.adopt(west_ctrl_pipe);
-            east_ctrl_Animation = SVG.adopt(east_ctrl_pipe);
-            for (const btn of document.getElementsByClassName("pausebtn")) {
-                runArrows(btn.id);
-            }
-            updateAnimation({"pondPiEast": "false", "pondPiWest":"false" });
-        }
-    </script>
+</html>

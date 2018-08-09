@@ -10,7 +10,7 @@ TOKEN = "my_token"
 USER_NAME = "pondPiEast"
 async def handler():
     async with websockets.connect(
-            'ws://localhost:8765', origin=USER_NAME) as websocket:
+            'ws://0.0.0.0:8765', origin=USER_NAME) as websocket:
         CENTRAL_SERVER = websocket
         
         val = json.dumps({'cmd':'pi_login', 'user':USER_NAME, 'pass':'secret'})

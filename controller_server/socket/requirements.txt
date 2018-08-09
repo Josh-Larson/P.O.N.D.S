@@ -1,0 +1,4 @@
+websockets==6.0
+flask==1.0.2
+flask-login==0.4.1
+
