@@ -1,8 +1,10 @@
 import flask
 import flask_login
 import UserAuth
+from flask import request
 
-app = flask.Flask(__name__)
+app = flask.Flask(__name__, static_folder='web_files')
+
 app.secret_key = b'_5#y2L"F4QJJajejsdJz\n\xec]/'
 login_manager = flask_login.LoginManager()
 
@@ -11,11 +13,17 @@ login_manager.init_app(app)
 unauth_user = UserAuth.User("admin", "passwordd")
 print(unauth_user.is_authenticated())
 
+@app.route('/<path:filename>')
+def send_file(filename):
+    return flask.send_from_directory(app.static_folder, filename)
 
-@app.route('/')
+
+@app.route('/login', methods=['POST'])
 def authenticate():
-
-    unauth_user = UserAuth.User("admin", "password")
+    username = request.form.get('username')
+    password = request.form.get('password')
+    
+    unauth_user = UserAuth.User(username, password)
     if unauth_user.is_authenticated():
         #Gets a cookie with remember=True sent to the User.
         flask_login.login_user(unauth_user, remember=True)
