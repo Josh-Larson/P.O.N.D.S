@@ -1,9 +1,9 @@
 from multiprocessing import Event, Process, Pipe
 from datetime import datetime as dt
 from pickle import dump, load
-import RPi.GPIO as GPIO
-from neopixel import *
 from time import sleep
+from ledControl import ledControl
+from pumpControl import pumpControl
 
 class pondC2():
 
@@ -31,9 +31,22 @@ class pondC2():
         except:
             return 'Timeout'
 
+    def getOverride(self):
+        self.pipe.send(['override','GET'])
+        try:
+            self.pipe.poll(5)
+            return self.pipe.recv()
+        except:
+            return 'Timeout'
+
     def setPump(self, bool):
-        if bool == 'on' or bool == 'off' or bool == 'auto':
+        if bool == 'on' or bool == 'off':
             self.pipe.send(['pump',bool])
+
+    def setOverride(self, bool,minutes):
+        if bool == 'on' or bool == 'off':
+            seconds = minutes * 60
+            self.pipe.send(['override',bool,seconds])
 
     def getLED(self):
         pass
@@ -66,14 +79,6 @@ class pondC2():
 
 
     def _pondC2(self,pipe,exitEvent,current):
-        # Grab Current Data
-        ledMode = current[0]
-        pumpTimes = current[1:]
-
-        # Setup Other Variables
-        pumpStatus = False
-        pumpOverride = False
-
         # Setup LED Data
         LED_COUNT = 300  # Number of LED pixels.
         LED_PIN = 18  # GPIO pin connected to the pixels (18 uses PWM!).
@@ -83,75 +88,47 @@ class pondC2():
         LED_INVERT = False  # True to invert the signal (when using NPN transistor level shift)
         LED_CHANNEL = 0  # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
-        # Setup GPIO for Pump Control
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(23,GPIO.OUT)
-        GPIO.output(23,0)
 
         # Create NeoPixel object with appropriate configuration.
-        strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
-        # Intialize the library (must be called once before other functions).
-        strip.begin()
-
-        # Test the LEDs in the Strip
-        for i in range(strip.numPixels()):
-            strip.setPixelColor(i,Color(0,255,0))
-            strip.show()
-            sleep(10/1000.0)
-        for i in range(strip.numPixels()):
-            strip.setPixelColor(i,Color(255,0,0))
-            strip.show()
-            sleep(10/1000.0)
-        for i in range(strip.numPixels()):
-            strip.setPixelColor(i,Color(0,0,255))
-            strip.show()
-            sleep(10/1000.0)
-        sleep(3)
-        for i in range(strip.numPixels()):
-            strip.setPixelColor(i,Color(0,0,0))
-        strip.show()
+        led = ledControl(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
+        led.setMode(current[0])
+        pump = pumpControl(23,current[1:])
 
 
         while not exitEvent.is_set():
+
             if pipe.poll():
                 data = pipe.recv()
 
                 if data[0] == 'times':
-                    pumpTimes = data[1:]
+                    pump.setTimes(data[1:])
 
                 if data[0] == 'pump':
                     if data[1] == 'on':
-                        pumpOverride = True
-                        pumpStatus = True
-                        GPIO.output(23, 1)
+                        pump.setPump(True)
                     elif data[1] == 'off':
-                        pumpOverride = True
-                        pumpStatus = False
-                        GPIO.output(23, 0)
-                    elif data[1] == 'auto':
-                        pumpOverride = False
+                        pump.setPump(False)
                     elif data[1] == 'GET':
-                        pipe.send(pumpStatus)
+                        pipe.send(pump.getStatus())
 
+                if data[0] == 'override':
+                    if data[1] == 'on':
+                        pump.setOverride(data[2])
+                    elif data[1] == 'off':
+                        pump.setAuto()
+                    elif data[1] == 'GET':
+                        pipe.send(pump.getOverride())
 
-            # Fetches the current time in seconds
-            time= dt.now()
-            currTime = (time - time.replace(hour=0,minute=0,second=0)).total_seconds()
 
             # Turns pump on or off
-            if pumpStatus and not pumpOverride:
-                if currTime >= pumpTimes[1] or currTime < pumpTimes[0]:
-                    pumpStatus = False
-                    GPIO.output(23,0)
-            elif pumpTimes[0] <= currTime < pumpTimes[1] and not pumpOverride:
-                pumpStatus = True
-                GPIO.output(23,1)
+            led.updateLed(pump.updatePump())
+
 
 
 
         pipe.close()
-        GPIO.output(23, 0)
-        GPIO.cleanup()
+        led.shutdown()
+        pump.shutdown()
         print("Done")
 
 
