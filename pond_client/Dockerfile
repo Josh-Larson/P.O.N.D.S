@@ -7,6 +7,8 @@
 
 FROM ubuntu:bionic
 
+ENV CENTRAL_SERVER_IP=0.0.0.0 WEB_SOCKET_PORT=8765
+
 RUN apt-get update && \
 apt-get install git python3 python3-pip scons swig -y
 
