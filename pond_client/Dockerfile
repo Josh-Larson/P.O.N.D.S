@@ -20,7 +20,6 @@ scons
 RUN cd rpi_ws281x/python && \ 
 python3 setup.py install
 
-#TODO: Change to volumes
 COPY ["*.py", "/usr/src/"]
 
 
