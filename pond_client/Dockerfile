@@ -1,7 +1,7 @@
 #NOTE: To build:
-# docker build -t rpi-client .
+# docker build -t rpi .
 # To run:
-# docker run rpi-client --privileged
+# ./startContainer.sh
 #
 
 
@@ -18,7 +18,8 @@ scons
 RUN cd rpi_ws281x/python && \ 
 python3 setup.py install
 
+#TODO: Change to volumes
+COPY ["*.py", "/usr/src/"]
 
-COPY app.py /usr/src/
 
 CMD ["python3", "/usr/src/app.py"]
