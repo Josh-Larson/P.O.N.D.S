@@ -1,4 +1,5 @@
-var ws = new WebSocket("ws://127.0.0.1:8765/");
+var loc = window.location.host;
+var ws = new WebSocket("ws://"+loc +":8765/");
 var TOKEN = null;
 ws.onopen = function (event) {
     ws.send(JSON.stringify({ cmd: "client_login", pass: "secret" }))
