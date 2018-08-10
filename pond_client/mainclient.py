@@ -2,17 +2,17 @@
 
 # WS client example
 
-import asyncio, websockets, json
+import asyncio, websockets, json, socker
 
 #import socket; socket.gethostname()
 CENTRAL_SERVER = None
 TOKEN = "my_token"
-USER_NAME = "pondPiEast"
+USER_NAME = socket.gethostname() #Make sure the hostname on the host device is "pondPiEast" and "pondPiWest" for each respective pond. 
 async def handler():
     async with websockets.connect(
             'ws://0.0.0.0:8765', origin=USER_NAME) as websocket:
         CENTRAL_SERVER = websocket
-        
+
         val = json.dumps({'cmd':'pi_login', 'user':USER_NAME, 'pass':'secret'})
 
         print(val)
