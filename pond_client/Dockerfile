@@ -21,7 +21,7 @@ RUN apt-get update --fix-missing && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
-COPY ["*.py", "/usr/src/"]
+VOLUME /usr/src/
 
 ENV CENTRAL_SERVER_IP=0.0.0.0 WEB_SOCKET_PORT=8765
 

@@ -25,4 +25,4 @@ fi
 
 echo "Setting as $HOSTNAME"
 
-docker run -h $HOSTNAME -e "CENTRAL_SERVER_IP=$CENTRAL_SERVER_IP" --name pondPi --restart unless-stopped -d  --device /dev/ttyAMA0:/dev/ttyAMA0 --device /dev/mem:/dev/mem --device /dev/gpiomem:/dev/gpiomem --privileged rpi
+docker run -h $HOSTNAME -e "CENTRAL_SERVER_IP=$CENTRAL_SERVER_IP" -v .:/usr/src --name pondPi --restart unless-stopped -d  --device /dev/ttyAMA0:/dev/ttyAMA0 --device /dev/mem:/dev/mem --device /dev/gpiomem:/dev/gpiomem --privileged cphamlet/duxnet-client
