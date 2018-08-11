@@ -7,11 +7,14 @@
 
 FROM ubuntu:bionic
 
-RUN apt-get update --fix-missing && \
-    apt-get install --no-install-recommends git python3 python3-pip scons && \
-    swig build-essential python3-dev python3-setuptools && \
-    python3-wheel -y && \ 
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update --fix-missing
+
+RUN apt-get install --no-install-recommends scons swig build-essential -y
+
+RUN apt-get install --no-install-recommends git python3 python3-dev \
+    python3-setuptools python3-wheel python3-pip -y
+
+RUN rm -rf /var/lib/apt/lists/*
 
 
 
@@ -25,9 +28,8 @@ RUN apt-get update --fix-missing && \
 
 RUN pip3 install websockets rpi.gpio
 
-RUN apt-get remove scons swig python git python3-pip build-essential && \
+RUN apt-get remove scons swig python git python3-pip build-essential \
     python3-dev python3-setuptools -y && \ 
-    rm -rf /var/lib/apt/lists && \
     apt-get autoremove -y 
 
 COPY ["*.py", "/usr/src/"]
