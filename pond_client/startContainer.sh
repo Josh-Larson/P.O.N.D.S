@@ -23,6 +23,6 @@ if [ $HOSTNAME -eq 2 ]
 then HOSTNAME=pondPiWest
 fi
 
-echo $HOSTNAME
+echo "Setting as $HOSTNAME"
 
-docker run -h $HOSTNAME -e "CENTRAL_SERVER_IP=$CENTRAL_SERVER_IP" --name pondPi -d  --device /dev/ttyAMA0:/dev/ttyAMA0 --device /dev/mem:/dev/mem --device /dev/gpiomem:/dev/gpiomem --privileged rpi
+docker run -h $HOSTNAME -e "CENTRAL_SERVER_IP=$CENTRAL_SERVER_IP" --name pondPi --restart unless-stopped -d  --device /dev/ttyAMA0:/dev/ttyAMA0 --device /dev/mem:/dev/mem --device /dev/gpiomem:/dev/gpiomem --privileged rpi
