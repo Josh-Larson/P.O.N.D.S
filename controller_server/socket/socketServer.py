@@ -8,7 +8,7 @@ pi_clients= {}
 web_clients = {}
 POND_STATUS = {'pondPiEast': "noconn", 'pondPiWest':"noconn"} 
 
-
+print("RUNNING THE SERVER")
 
 #This funciton takes a password as input, and outputs a session token.
 #Used to authenticate the web_clients
