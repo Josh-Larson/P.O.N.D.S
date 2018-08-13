@@ -1,15 +1,14 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # WS server example
 
-import asyncio, uuid, json
-import websockets
+import asyncio, uuid, json, websockets, os
 
 pi_clients= {}
 web_clients = {}
 POND_STATUS = {'pondPiEast': "noconn", 'pondPiWest':"noconn"} 
 
-
+print("RUNNING THE SERVER")
 
 #This funciton takes a password as input, and outputs a session token.
 #Used to authenticate the web_clients
@@ -27,7 +26,9 @@ async def client_login(msg, websocket):
 #This function takes a username and pword as input, outputs a session token. 
 #Used to authenticate the pi's 
 async def pi_login(msg, websocket):
-    #TODO, check for these vals in dict to prevent keyError. 
+    if 'user' not in msg or 'pass' not in msg:
+        await sendError(websocket, 'Error login: Malformed command.')
+        return
     user, password = msg['user'], msg['pass']
 
     if  password=="secret":
@@ -42,7 +43,7 @@ async def pi_login(msg, websocket):
 #set_flow: This function, initiated by a web client, s
 #sets the flow status of a particular pump.
 async def set_flow(msg, websocket):
-    #Prevents valid command. 
+    #Prevents invalid command. 
     if any(i not in msg for i in ['target','flow_value','token']):
         await sendError(websocket, 'Error: Malformed command.')
         return
@@ -63,7 +64,7 @@ async def set_flow(msg, websocket):
 
 
 
-#This function, when authenticated, pushes the stauts of all fountains to all connected web clients
+#This function, when authenticated, pushes the status of all fountains to all connected web clients
 async def update_clients(msg, websocket):
     #Check for these vals in dict to prevent keyError. IF it is missing. 
     if any(i not in msg for i in ['user','token','flow_value']) :
@@ -107,6 +108,6 @@ async def sendError(websocket, msg):
 
 
 #Starts the websocket server
-start_server = websockets.serve(handler, '0.0.0.0', 8765)
+start_server = websockets.serve(handler, '0.0.0.0', os.environ['WEB_SOCKET_PORT'])
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
