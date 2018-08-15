@@ -67,6 +67,9 @@ class ledControl:
             else:
                 self.clearLed()
                 self.iterator = 0
+        else:
+            self.clearLed()
+            self.iterator = 0
 
         if not self.linked:
             time = dt.now()
