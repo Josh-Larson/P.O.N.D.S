@@ -2,11 +2,48 @@
 
 All of the code of the two Raspberry Pis that actually control fountain pumps will be in this folder. 
 
-The two pond Pis have the ideal requirements:
+The two pond Pis meet the following requirements:
 
 1. Clients (Pond Pis) connect to the central controller to serve status information
-    * Sends LED status, and pond status to the controller
-    * Sends other status information?
-2. Ideally, both of the pond Pis will share the exact same codebase.
-3. Configure Pi's to start their python programs as daemons, so they *must* start their programs on boot. This will prevent users from having to manually restart the script on each boot. 
+    * Sends pump to the controller
+2. Both of the pond Pis share the exact same codebase.
+
+## Environment Setup
+
+1. Install Docker
+
+```
+curl -sSL https://get.docker.com | sh -
+```
+
+2. Build the image, OR pull the image from Docker Hub (recommended. 
+
+To pull the image:
+
+```
+docker pull cphamlet/duxnet-client
+```
+
+To build the image (Takes approx 20 minutes):
+```
+docker build -t cphamlet/duxnet-client .
+```
+
+3. Run the container. Note: The central server must be running first
+```
+sh startContainer.sh
+```
+
+### Misc:
+
+Delete the container with:
+
+```
+docker stop pondPi && docker rm pondPi
+```
+
+Delete the image with:
+```
+docker rmi cphamlet/dexnet-client
+```
 
