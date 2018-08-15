@@ -51,8 +51,8 @@ class pondC2():
     def getLED(self):
         pass
 
-    def setLED(self, value, clear=False, pattern=True):
-        pass
+    def setLED(self, value):
+        self.pipe.send(['LED',value])
 
     def getTimes(self):
         on = self.defaults[1]/3600
@@ -118,6 +118,9 @@ class pondC2():
                         pump.setAuto()
                     elif data[1] == 'GET':
                         pipe.send(pump.getOverride())
+
+                if data[0] == 'LED':
+                    led.setMode(data[1])
 
 
             # Turns pump on or off

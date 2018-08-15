@@ -32,9 +32,9 @@ class ledControl:
     def setMode(self, mode):
         """
         Modes:
-        0- Off
-        1- Clock
-        2- Rainbow
+        2- Off
+        0- Clock
+        1- Rainbow
         """
         self.ledMode = mode if 0 <= mode <= 3 else self.ledMode
 
@@ -58,10 +58,10 @@ class ledControl:
             run = True
 
         if run:
-            if self.ledMode == 1:
+            if self.ledMode == 0:
                 self._ledClock(5, 5, 5, Color(0, 255, 0), Color(255, 0, 0), Color(0, 0, 255),True)
                 self.iterator = 0
-            elif self.ledMode == 2:
+            elif self.ledMode == 1:
                 self._rainbowCycle(20,self.iterator)
                 self.iterator = self.iterator + 1 if self.iterator < 255 else 0
             else:
