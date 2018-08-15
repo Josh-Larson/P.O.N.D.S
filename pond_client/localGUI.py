@@ -37,6 +37,8 @@ class localGUI():
         self.main.sysOff.clicked.connect(self.sysOff)
         self.main.ledMode.currentIndexChanged.connect(self.setLED)
 
+        self.mainWindow.closeEvent = self.closeEvent
+
         self.override.ok.clicked.connect(self.approveOverride)
         self.override.cancel.clicked.connect(self.denyOverride)
 
@@ -85,8 +87,15 @@ class localGUI():
     def setLED(self):
         self.pond.setLED(self.main.ledMode.currentIndex())
 
+    def closeEvent(self,event):
+        msg = "Are you sure you want to shutdown pond management?"
+        reply = QMessageBox.question(self.mainWindow,"Question",msg,QMessageBox.Yes,QMessageBox.No)
 
-
+        if reply == QMessageBox.Yes:
+            self.pond.quit()
+            event.accept()
+        else:
+            event.ignore()
 
 
 

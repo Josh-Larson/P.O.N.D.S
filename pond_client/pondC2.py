@@ -14,7 +14,7 @@ class pondC2():
         try:
             self.defaults = load(open("defaults.p",'rb'))
         except:
-            self.defaults = [1,21600,61200] #LED Mode, Pump On Time (0600), Pump Off Time (1700)
+            self.defaults = [0,21600,61200] #LED Mode, Pump On Time (0600), Pump Off Time (1700)
             dump(self.defaults,open("defaults.p",'wb'))
 
         self.process = Process(target=self._pondC2, args=(p2,self.exitEvent,self.defaults,))
