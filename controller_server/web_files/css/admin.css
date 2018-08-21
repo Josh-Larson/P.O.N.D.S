@@ -1,0 +1,29 @@
+body{ 
+    background-image:url("../img/background.jpg"); 
+    background-repeat:no-repeat; 
+    background-position:center; 
+    padding:10px;
+}
+
+/* body{
+    background: #F2994A;  
+    background: -webkit-linear-gradient(to right, #F2C94C, #F2994A);  
+    background: linear-gradient(to right, #F2C94C, #F2994A);
+} */
+.background{
+    background:rgba(255,255,255,0.69);
+    padding:2em;
+    margin-top:4em;
+    border-radius: 10px;
+}
+
+#title-text{
+    border-top: 1px solid #808080;
+    padding-top:1em;
+    border-bottom: 1px solid #808080;
+}
+
+#title, #title-text{
+    margin-bottom:1em;
+
+}
