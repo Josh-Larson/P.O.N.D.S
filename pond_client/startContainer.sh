@@ -15,14 +15,12 @@ echo " 1. Set this pi up as pondPiEast. "
 echo " 2. Set this pi up as pondPiWest. "
 read HOSTNAME
 
-if [ $HOSTNAME -eq 1 ]
+if [ "$HOSTNAME" -eq 1 ]
 then HOSTNAME=pondPiEast
-fi
-
-if [ $HOSTNAME -eq 2 ]
+elif [ "$HOSTNAME" -eq 2 ]
 then HOSTNAME=pondPiWest
 fi
 
 echo "Setting as $HOSTNAME"
 
-docker run -h $HOSTNAME -e "CENTRAL_SERVER_IP=$CENTRAL_SERVER_IP" -v $(pwd):/usr/src --name pondPi --restart unless-stopped -d  --device /dev/ttyAMA0:/dev/ttyAMA0 --device /dev/mem:/dev/mem --device /dev/gpiomem:/dev/gpiomem --privileged cphamlet/duxnet-client
+docker run -h "$HOSTNAME" -e "CENTRAL_SERVER_IP=$CENTRAL_SERVER_IP" -v $(pwd):/usr/src --name pondPi --restart unless-stopped -d  --device /dev/ttyAMA0:/dev/ttyAMA0 --device /dev/mem:/dev/mem --device /dev/gpiomem:/dev/gpiomem --privileged cphamlet/duxnet-client
