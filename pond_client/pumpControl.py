@@ -34,7 +34,7 @@ class pumpControl:
     def setPump(self,status):
         if type(status) is bool and self.pumpOverride:
             self.pumpStatus = status
-            GPIO.output(self.pumpStatus)
+            GPIO.output(self.pin,self.pumpStatus)
 
     def updatePump(self):
         time = dt.now()

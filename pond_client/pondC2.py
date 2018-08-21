@@ -14,7 +14,7 @@ class pondC2():
         try:
             self.defaults = load(open("defaults.p",'rb'))
         except:
-            self.defaults = [1,21600,61200] #LED Mode, Pump On Time (0600), Pump Off Time (1700)
+            self.defaults = [0,21600,61200,300] #LED Mode, Pump On Time (0600), Pump Off Time (1700), NumPixels
             dump(self.defaults,open("defaults.p",'wb'))
 
         self.process = Process(target=self._pondC2, args=(p2,self.exitEvent,self.defaults,))
@@ -51,8 +51,8 @@ class pondC2():
     def getLED(self):
         pass
 
-    def setLED(self, value, clear=False, pattern=True):
-        pass
+    def setLED(self, value):
+        self.pipe.send(['LED',value])
 
     def getTimes(self):
         on = self.defaults[1]/3600
@@ -80,7 +80,7 @@ class pondC2():
 
     def _pondC2(self,pipe,exitEvent,current):
         # Setup LED Data
-        LED_COUNT = 300  # Number of LED pixels.
+        LED_COUNT = current[3]  # Number of LED pixels.
         LED_PIN = 18  # GPIO pin connected to the pixels (18 uses PWM!).
         LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
         LED_DMA = 10  # DMA channel to use for generating signal (try 10)
@@ -118,6 +118,9 @@ class pondC2():
                         pump.setAuto()
                     elif data[1] == 'GET':
                         pipe.send(pump.getOverride())
+
+                if data[0] == 'LED':
+                    led.setMode(data[1])
 
 
             # Turns pump on or off
