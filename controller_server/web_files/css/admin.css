@@ -11,10 +11,10 @@ body{
     background: linear-gradient(to right, #F2C94C, #F2994A);
 } */
 .background{
-    background:rgba(255,255,255,0.69);
+    background:rgba(255,255,255,0.79);
     padding:2em;
     margin-top:4em;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 #title-text{
