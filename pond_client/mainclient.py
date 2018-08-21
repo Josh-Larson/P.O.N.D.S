@@ -1,16 +1,33 @@
 #!/usr/bin/env python
+"""
+  Author: Connor Hamlet
+  Description: This code is the websocket client for the pondPis.
+  When this launches, it will connect to the central websocket server, and 
+  it will 'authenticate' using a weak form of authentication. It will 
+  encrypt the connection with the self-signed certificate on the server,
+  but it will not attempt to verify the validity of the certificate. 
+
+  This file is responsible for updatiing the central server the pump's status,
+  along with any other configuration information if applicable.
+
+"""
+
 
 # WS client example
 
-import asyncio, websockets, json, socket, os
+import asyncio, websockets, json, socket, os, ssl
 
-#import socket; socket.gethostname()
 CENTRAL_SERVER = None
-TOKEN = "my_token"
+TOKEN = ""
 USER_NAME = socket.gethostname() #Make sure the hostname on the host device is "pondPiEast" and "pondPiWest" for each respective pond. 
+
 async def handler():
+
+    # ssl._create_unverified_context() will allow this client to use tls
+    # without trusting the cert. This should never be used in practice, 
+    # But for this exercise it opens a mitm vulnerability
     async with websockets.connect(
-            'ws://'+os.environ['CENTRAL_SERVER_IP']+':'+os.environ['WEB_SOCKET_PORT'], origin=USER_NAME) as websocket:
+            'wss://'+os.environ['CENTRAL_SERVER_IP']+'/socket', ssl=ssl._create_unverified_context()) as websocket:
         CENTRAL_SERVER = websocket
 
         val = json.dumps({'cmd':'pi_login', 'user':USER_NAME, 'pass':'secret'})

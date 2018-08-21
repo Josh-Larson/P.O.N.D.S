@@ -1,8 +1,8 @@
 body#LoginForm{ background-image:url("../img/background.jpg"); background-repeat:no-repeat; background-position:center; background-size:cover; padding:10px;}
 
 .form-heading { color:#fff; font-size:23px;}
-.panel h2{ color:#444444; font-size:18px; margin:0 0 8px 0;}
-.panel p { color:#777777; font-size:14px; margin-bottom:30px; line-height:24px;}
+.panel h2{ color:#444444; margin:0 0 8px 0;}
+.panel p { color:#777777; margin-bottom:30px; line-height:24px;}
 .login-form .form-control {
   background: #f7f7f7 none repeat scroll 0 0;
   border: 1px solid #d4d4d4;
@@ -11,13 +11,14 @@ body#LoginForm{ background-image:url("../img/background.jpg"); background-repeat
   height: 50px;
   line-height: 50px;
 }
+
 .main-div {
   background: #ffffff none repeat scroll 0 0;
   border-radius: 2px;
-  margin: 10px auto 30px;
-  max-width: 38%;
-  padding: 50px 70px 70px 71px;
+  padding: 7%;
+  margin-top:3em;
 }
+
 
 .login-form .form-group {
   margin-bottom:10px;
@@ -28,11 +29,14 @@ body#LoginForm{ background-image:url("../img/background.jpg"); background-repeat
   font-size: 14px;
   text-decoration: underline;
 }
-.login-form  .btn.btn-primary {
-  background: #f0ad4e none repeat scroll 0 0;
-  border-color: #f0ad4e;
-  color: #ffffff;
-  font-size: 14px;
+.btn-warning{
+  background: #ffad39;
+  border-color: #ffad39;
+}
+.login-form  .btn.btn-warning {
+
+  color:white; 
+  font-size: 18px;
   width: 100%;
   height: 50px;
   line-height: 50px;

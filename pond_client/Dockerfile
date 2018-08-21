@@ -2,7 +2,8 @@
 # docker build -t rpi .
 # To run:
 # ./startContainer.sh
-#
+# This Dockerfile will only build on a Rpi. To test a local dev copy, 
+# Remove the scons directive
 
 
 FROM ubuntu:bionic
@@ -23,6 +24,6 @@ RUN apt-get update --fix-missing && \
 
 VOLUME /usr/src/
 
-ENV CENTRAL_SERVER_IP=0.0.0.0 WEB_SOCKET_PORT=8765
+ENV CENTRAL_SERVER_IP=0.0.0.0 WEB_SOCKET_PORT=8080
 
 CMD ["python3", "/usr/src/mainclient.py"]
