@@ -2,7 +2,8 @@
 # docker build -t rpi .
 # To run:
 # ./startContainer.sh
-#
+# This Dockerfile will only build on a Rpi. To test a local dev copy, 
+# Remove the scons directive
 
 
 FROM ubuntu:bionic
