@@ -3,13 +3,14 @@ from time import sleep
 from datetime import datetime as dt
 
 class ledControl:
-    def __init__(self, LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL):
+    def __init__(self, LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL,mirrored):
         self.strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
         self.strip.begin()
         self.ledMode = 0
         self.iterator = 0
         self.linked = True
         self.linkTime = -1
+        self.mirrored = mirrored
         
     def testLed(self):
         for i in range(self.strip.numPixels()):
@@ -59,17 +60,14 @@ class ledControl:
 
         if run:
             if self.ledMode == 0:
-                self._ledClock(5, 5, 5, Color(0, 255, 0), Color(255, 0, 0), Color(0, 0, 255),True)
-                self.iterator = 0
+                self.drawLED(self._ledClock(5, 5, 5, Color(0, 255, 0), Color(255, 0, 0), Color(0, 0, 255),True),self.mirrored)
             elif self.ledMode == 1:
-                self._rainbowCycle(20,self.iterator)
+                self.drawLED(self._rainbowCycle(20,self.iterator),self.mirrored)
                 self.iterator = self.iterator + 1 if self.iterator < 255 else 0
             else:
                 self.clearLed()
-                self.iterator = 0
         else:
             self.clearLed()
-            self.iterator = 0
 
         if not self.linked:
             time = dt.now()
@@ -86,6 +84,23 @@ class ledControl:
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i,Color(0,0,0))
         self.strip.show()
+
+
+    def drawLED(self,leds,mirror=False,delay=0):
+        for i in range(self.strip.numPixels()):
+            self.strip.setPixelColor(i,Color(0,0,0))
+            
+        if not mirror:
+            for i in leds.keys():
+                self.strip.setPixelColor(i, leds[i])
+            self.strip.show()
+            sleep(delay/1000)
+
+        else:
+            for i in leds.keys():
+                self.strip.setPixelColor(self.strip.numPixels()-i-1,leds[i])
+            self.strip.show()
+            sleep(delay/1000)
 
 
 
@@ -156,8 +171,7 @@ class ledControl:
         minList = self._wrap(minList, self.strip.numPixels()-1)
         hourList = self._wrap(hourList,self.strip.numPixels()-1)
 
-        for i in range(self.strip.numPixels()):
-            self.strip.setPixelColor(i,Color(0,0,0))
+
 
         if seconds:
             for i in secList:
@@ -181,12 +195,12 @@ class ledControl:
             return Color(0, pos * 3, 255 - pos * 3)
 
 
-    def _rainbowCycle(self,wait_ms=20,iterator=0):
+    def _rainbowCycle(self, iterator=0):
         """Draw rainbow that uniformly distributes itself across all pixels."""
+        leds = {}
         for i in range(self.strip.numPixels()):
-            self.strip.setPixelColor(i, self._wheel((int(i * 256 / self.strip.numPixels()) + iterator) & 255))
-        self.strip.show()
-        sleep(wait_ms / 1000.0)
+            leds[i] = self._wheel((int(i * 256 / self.strip.numPixels()) + iterator) & 255)
+        return leds
 
 
     def _ledSpin(self, strip, color, loops):

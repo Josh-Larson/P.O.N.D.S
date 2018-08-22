@@ -14,7 +14,7 @@ class pondC2():
         try:
             self.defaults = load(open("defaults.p",'rb'))
         except:
-            self.defaults = [0,21600,61200,300] #LED Mode, Pump On Time (0600), Pump Off Time (1700), NumPixels
+            self.defaults = [0,21600,61200,300,False] #LED Mode, Pump On Time (0600), Pump Off Time (1700), NumPixels,Mirrored
             dump(self.defaults,open("defaults.p",'wb'))
 
         self.process = Process(target=self._pondC2, args=(p2,self.exitEvent,self.defaults,))
@@ -90,7 +90,7 @@ class pondC2():
 
 
         # Create NeoPixel object with appropriate configuration.
-        led = ledControl(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
+        led = ledControl(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL,current[4])
         led.setMode(current[0])
         pump = pumpControl(23,current[1:])
 
