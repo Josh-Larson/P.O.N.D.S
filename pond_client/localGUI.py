@@ -13,6 +13,7 @@ class localGUI():
         self.main = Ui_PONDcontrol()
         self.main.setupUi(self.mainWindow)
         self.mainWindow.show()
+        self.mainWindow.showMaximized()
         self.main.ledMode.addItems(['Clock','Rainbow','Off'])
         
         self.overrideWindow = QWidget()
