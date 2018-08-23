@@ -171,16 +171,17 @@ class ledControl:
         minList = self._wrap(minList, self.strip.numPixels()-1)
         hourList = self._wrap(hourList,self.strip.numPixels()-1)
 
-
+        leds = {}
 
         if seconds:
             for i in secList:
-                self.strip.setPixelColor(i,secColor)
+                leds[i] = secColor
         for i in minList:
-            self.strip.setPixelColor(i,minColor)
+            leds[i] = minColor
         for i in hourList:
-            self.strip.setPixelColor(i,hourColor)
-        self.strip.show()
+            leds[i] = hourColor
+
+        return leds
 
 
     def _wheel(self, pos):
