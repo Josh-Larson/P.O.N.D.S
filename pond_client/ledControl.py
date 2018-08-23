@@ -62,7 +62,7 @@ class ledControl:
             if self.ledMode == 0:
                 self.drawLED(self._ledClock(5, 5, 5, Color(0, 255, 0), Color(255, 0, 0), Color(0, 0, 255),True),self.mirrored)
             elif self.ledMode == 1:
-                self.drawLED(self._rainbowCycle(20,self.iterator),self.mirrored)
+                self.drawLED(self._rainbowCycle(self.iterator),self.mirrored)
                 self.iterator = self.iterator + 1 if self.iterator < 255 else 0
             else:
                 self.clearLed()
