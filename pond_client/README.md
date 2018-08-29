@@ -47,6 +47,6 @@ docker stop pondPi && docker rm pondPi
 
 Delete the image with:
 ```
-docker rmi cphamlet/dexnet-client
+docker rmi cphamlet/duxnet-client
 ```
 
