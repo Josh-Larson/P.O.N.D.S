@@ -16,11 +16,10 @@ services:
       - ./config/nginx-selfsigned.key:/etc/nginx/ssl/nginx-selfsigned.key
   backend:
     container_name: python3 
-    image: python:3.6.5
+    build: ./socket
     restart: unless-stopped
     volumes:
       - ./config/entrypoint.sh:/usr/src/app/entrypoint.sh
-      - ./config/requirements.txt:/usr/src/app/requirements.txt
       - ./socket:/usr/src/app/
       - ./web_files:/usr/src/app/web_files
     command: ["bash", "/usr/src/app/entrypoint.sh"]
