@@ -20,7 +20,7 @@
 
 import asyncio, websockets, json, socket, os, ssl
 
-# Websocket object of the ccentral server
+# Websocket object of the central server
 CENTRAL_SERVER = None
 #The access token for a websocket session. Is sent with every message
 TOKEN = ""
