@@ -5,7 +5,7 @@ class pumpControl:
     def __init__(self,pin,pumpTimes):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(pin, GPIO.OUT)
-        GPIO.output(pin, 0)
+        GPIO.output(pin, GPIO.LOW)
         self.pin = pin
 
         self.pumpTimes = pumpTimes
@@ -34,7 +34,7 @@ class pumpControl:
     def setPump(self,status):
         if type(status) is bool and self.pumpOverride:
             self.pumpStatus = status
-            GPIO.output(self.pin,self.pumpStatus)
+            GPIO.output(self.pin,GPIO.HIGH if self.pumpStatus else GPIO.LOW)
 
     def updatePump(self):
         time = dt.now()
@@ -44,12 +44,12 @@ class pumpControl:
             if self.pumpStatus:
                 if currTime >= self.pumpTimes[1] or currTime < self.pumpTimes[0] or dt.weekday(time) not in self.activeDays:
                     self.pumpStatus = False
-                    GPIO.output(self.pin, self.pumpStatus)
+                    GPIO.output(self.pin, GPIO.HIGH if self.pumpStatus else GPIO.LOW)
 
             else:
                 if self.pumpTimes[0] <= currTime < self.pumpTimes[1] and dt.weekday(time) in self.activeDays:
                     self.pumpStatus = True
-                    GPIO.output(self.pin, self.pumpStatus)
+                    GPIO.output(self.pin, GPIO.HIGH if self.pumpStatus else GPIO.LOW)
 
         else:
             if currTime >= self.pumpOverrideTime:
@@ -64,5 +64,5 @@ class pumpControl:
         return [self.pumpOverride,self.pumpOverrideTime]
 
     def shutdown(self):
-        GPIO.output(self.pin, 0)
+        GPIO.output(self.pin, GPIO.LOW)
         GPIO.cleanup()
