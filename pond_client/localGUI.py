@@ -61,7 +61,7 @@ class localGUI():
         self.pin.but8.clicked.connect(self._type8)
         self.pin.but9.clicked.connect(self._type9)
 
-        self.password = '1234'
+        self.password = '2017'
         self.exitCount = 0
 
 

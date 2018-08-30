@@ -222,7 +222,7 @@ class ledControl:
                     iterator -= 1
                 else:
                     leds[i] = Color(239,255,1)
-                return leds
+            return leds
 
 
 
