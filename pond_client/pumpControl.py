@@ -18,6 +18,9 @@ class pumpControl:
     def setTimes(self,times):
         self.pumpTimes = times
 
+    def setDays(self,days):
+        self.activeDays = days
+
     def setOverride(self,seconds):
         time = dt.now()
         currTime = (time - time.replace(hour=0, minute=0, second=0)).total_seconds()
