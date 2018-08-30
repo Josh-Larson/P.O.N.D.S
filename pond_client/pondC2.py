@@ -37,7 +37,7 @@ class pondC2():
             self.pipe.poll(5)
             return self.pipe.recv()
         except:
-            return 'Timeout'
+            return ['Timeout']
 
     def setPump(self, bool):
         if bool == 'on' or bool == 'off':
@@ -69,6 +69,9 @@ class pondC2():
 
         dump(self.defaults, open("defaults.p", 'wb'))
         self.pipe.send(['times',self.defaults[1],self.defaults[2]])
+
+    def setDays(self,days=[0,1,2,3,4]):
+        self.pipe.send(['days',days])
 
 
     def quit(self):
@@ -121,6 +124,9 @@ class pondC2():
 
                 if data[0] == 'LED':
                     led.setMode(data[1])
+
+                if data[0] == 'days':
+                    pump.setDays(data[1])
 
 
             # Turns pump on or off

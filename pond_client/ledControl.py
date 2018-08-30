@@ -33,9 +33,10 @@ class ledControl:
     def setMode(self, mode):
         """
         Modes:
-        2- Off
+        3- Off
         0- Clock
         1- Rainbow
+        2- Maluda
         """
         self.ledMode = mode if 0 <= mode <= 3 else self.ledMode
 
@@ -64,6 +65,9 @@ class ledControl:
             elif self.ledMode == 1:
                 self.drawLED(self._rainbowCycle(self.iterator),self.mirrored)
                 self.iterator = self.iterator + 1 if self.iterator < 255 else 0
+            elif self.ledMode == 2:
+                self.drawLED(self._maludaLight(self.iterator),self.mirrored)
+                self.iterator = self.iterator + 1 if self.iterator < self.strip.numPixels()*2 else 0
             else:
                 self.clearLed()
         else:
@@ -202,6 +206,24 @@ class ledControl:
         for i in range(self.strip.numPixels()):
             leds[i] = self._wheel((int(i * 256 / self.strip.numPixels()) + iterator) & 255)
         return leds
+
+
+    def _maludaLight(self,iterator=0):
+        leds = {}
+        if iterator <= self.strip.numPixels():
+            for i in range(iterator):
+                leds[i] = Color(239,255,1)
+            return leds
+        else:
+            iterator = iterator - self.strip.numPixels()
+            for i in range(self.strip.numPixels()):
+                if iterator != 0:
+                    leds[i] = Color(0,0,0)
+                    iterator -= 1
+                else:
+                    leds[i] = Color(239,255,1)
+                return leds
+
 
 
     def _ledSpin(self, strip, color, loops):
