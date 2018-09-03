@@ -51,6 +51,7 @@ class localGUI():
         self.override.cancel.clicked.connect(self.denyOverride)
 
         self.pin.enter.clicked.connect(self.checkUnlock)
+        self.pin.back.clicked.connect(self._back)
         self.pin.but1.clicked.connect(self._type1)
         self.pin.but2.clicked.connect(self._type2)
         self.pin.but3.clicked.connect(self._type3)
@@ -60,8 +61,9 @@ class localGUI():
         self.pin.but7.clicked.connect(self._type7)
         self.pin.but8.clicked.connect(self._type8)
         self.pin.but9.clicked.connect(self._type9)
+        self.pin.but0.clicked.connect(self._type0)
 
-        self.password = '1234'
+        self.password = '2017'
         self.exitCount = 0
 
 
@@ -204,6 +206,10 @@ class localGUI():
         self.pin.number.insert('8')
     def _type9(self):
         self.pin.number.insert('9')
+    def _type0(self):
+        self.pin.number.insert('0')
+    def _back(self):
+        self.pin.number.backspace()
 
 
 
