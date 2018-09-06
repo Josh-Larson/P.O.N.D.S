@@ -19,8 +19,9 @@ async def client_login(msg, websocket):
         await websocket.send(json.dumps({'msgtype': 'notify', 'login': 'true', 'token': token, 'POND_STATUS':POND_STATUS}))
         #Push flow status to client right after client-login.
         #Remove from client map after x seconds?
-
-
+    else:
+        web_clients[token] = websocket
+        await websocket.send(json.dumps({'msgtype': 'notify', 'login': 'failed', 'POND_STATUS':POND_STATUS}))
 
 
 #This function takes a username and pword as input, outputs a session token. 
@@ -93,6 +94,10 @@ switcher = {
 #This handler waits for a message from anybody, regardless whether it is a msg from a web client or the raspberry Pi. 
 async def handler(websocket, path):
     while True:
+        if not websocket.open:
+            print("Woah brody, not open")
+        else:
+            print("Let's get it started")
         msg = await websocket.recv()    
         msg = json.loads(msg)
         print(msg)
