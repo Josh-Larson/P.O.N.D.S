@@ -30,6 +30,12 @@ def authenticate():
 def serveSecurePage():
     return flask.send_from_directory(app.static_folder, 'admin.html')
 
+@app.route('/login')
+def servePage():
+    return flask.send_from_directory(app.static_folder, 'login.html')
+
+
+
 @app.route('/js/<filename>')
 def send_js(filename):
     return flask.send_from_directory(app.static_folder+'/js', filename)
