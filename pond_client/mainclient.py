@@ -19,7 +19,10 @@
 # WS client example
 
 import asyncio, websockets, json, socket, os, ssl
+import pondC2
 
+PUMP_CONTROL = pondC2.pondC2()
+PUMP_CONTROL.setOverride('on', 60)
 # Websocket object of the central server
 CENTRAL_SERVER = None
 #The access token for a websocket session. Is sent with every message
@@ -65,6 +68,11 @@ async def handler():
             if msg['msgtype'] == "cmd" and msg['cmd'] == "set_flow":
                 flow_value = msg['flow_value']
                 #API.setPumpStatus(API CALL HERE TO SET THE PUMP)
+                if flow_value == 'true':
+                    print("Turning pump on...")
+                    PUMP_CONTROL.setPump('on')
+                else:
+                    PUMP_CONTROL.setPump('off')
                 await CENTRAL_SERVER.send(json.dumps({'cmd':'update_clients', 'user':USER_NAME, 'token':TOKEN, 'flow_value':flow_value}))
         CENTRAL_SERVER.close()
 
