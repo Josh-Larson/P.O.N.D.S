@@ -35,7 +35,6 @@ function runArrows(ctrl) {
                     var d = "M" + [Pnt0.x, Pnt0.y, Pnt1.x, Pnt1.y, Pnt2.x, Pnt2.y].toString()
                     window[ctrl + "_arrowLine2"].setAttribute("d", d)
                 }
-    //            window[ctrl + "_Impeller"].setAttribute("transform", "rotate(" + (-rotateAngle * pos) + " " + w_cx + " " + w_cy + " )")
             })
             .after(function () {
                 runArrows(ctrl)
@@ -48,10 +47,9 @@ function runArrows(ctrl) {
 
         ["east_ctrl", "west_ctrl"].forEach((pond) => {
             switch (status[pond]) {
-                case "true":
+                case "True":
                     window[pond + "_Animation"].play()
                     document.getElementById(pond).innerHTML = "Stop Pump"
-                //    window[pond + "_Impeller"].setAttribute("fill", "green")
                     window[pond + "_shape4"].setAttribute("fill", "white")
                     window[pond + "_shape8"].setAttribute("fill", "white")
                     window[pond + "_shape10"].setAttribute("fill", "white")
@@ -61,7 +59,6 @@ function runArrows(ctrl) {
                 default:
                     window[pond + "_Animation"].pause()
                     document.getElementById(pond).innerHTML = "Start Pump"
-                //    window[pond + "_Impeller"].setAttribute("fill", "crimson")
                     window[pond + "_shape4"].setAttribute("fill", "crimson")
                     window[pond + "_shape8"].setAttribute("fill", "crimson")
                     window[pond + "_shape10"].setAttribute("fill", "crimson")
@@ -72,27 +69,12 @@ function runArrows(ctrl) {
     }
 
 
-    //==============Impeller==============
-    //--onload---
-   //---impeller rotate center point---
-//     var w_cx;
-//     var w_cy;
-//     function placeAsImpeller() {
-//         var bb = west_ctrl_Impeller.getBBox();
-//         w_cx = bb.x + .5 * bb.width;
-//         w_cy = bb.y + .5 * bb.height + 1;
-//    }
-
-//document.getElementById("test").onclick = send_flow;
 document.addEventListener("onload", init(), false);
     function init() {
-
-//       placeAsImpeller();
-
        west_ctrl_Animation = SVG.adopt(west_ctrl_pipe);
        east_ctrl_Animation = SVG.adopt(east_ctrl_pipe);
        for (const btn of document.getElementsByClassName("pausebtn")) {
             runArrows(btn.id);
         }
-        updateAnimation({ "pondPiEast": "false", "pondPiWest": "false" });
+        updateAnimation({ "pondPiEast": "False", "pondPiWest": "False" });
     }

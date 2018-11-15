@@ -18,14 +18,13 @@ ws.onmessage = function (event) {
         updateAnimation(msg['POND_STATUS'])
     } else if (msg['msgtype'] == "cmd" && msg['cmd'] == 'update') {
         updateAnimation(msg['POND_STATUS'])
-        console.log(msg["POND_STATUS"]);
     }
 
 };
 
 var set_flow = function (self) {
     var target = (self.target.id == "west_ctrl") ? "pondPiWest" : "pondPiEast";
-    var flow_value = (self.target.innerHTML == "Stop Pump") ? "false" : "true";
+    var flow_value = (self.target.innerHTML == "Stop Pump") ? "False" : "True";
     ws.send(JSON.stringify({ msgtype: "cmd", cmd: "set_flow", target: target, flow_value: flow_value, token: TOKEN }))
     return
 }
