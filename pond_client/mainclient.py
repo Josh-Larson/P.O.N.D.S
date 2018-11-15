@@ -22,7 +22,6 @@ import asyncio, websockets, json, socket, os, ssl
 import pondC2
 
 PUMP_CONTROL = pondC2.pondC2()
-PUMP_CONTROL.setOverride('on', 60)
 # Websocket object of the central server
 CENTRAL_SERVER = None
 #The access token for a websocket session. Is sent with every message
@@ -40,7 +39,6 @@ async def handler():
 
         val = json.dumps({'cmd':'pi_login', 'user':USER_NAME, 'pass':'secret'})
 
-        print(val)
         #Sends login credentials to central server. 
         await CENTRAL_SERVER.send(val)
 
@@ -50,7 +48,6 @@ async def handler():
         #Decodes the JSON
         login_confirm = json.loads(login_confirm)
         TOKEN = login_confirm['token']
-        print(login_confirm)
 
         #After logging in, send a message to the server which states the flow_value, or whether or not the pond is flowing. 
         await CENTRAL_SERVER.send(json.dumps({'cmd':'update_clients', 'user':USER_NAME, 'flow_value':'true', 'token':TOKEN}))
@@ -67,7 +64,8 @@ async def handler():
 
             if msg['msgtype'] == "cmd" and msg['cmd'] == "set_flow":
                 flow_value = msg['flow_value']
-                #API.setPumpStatus(API CALL HERE TO SET THE PUMP)
+                #(API CALL HERE TO SET THE PUMP)
+                PUMP_CONTROL.setOverride('on', 5)
                 if flow_value == 'true':
                     print("Turning pump on...")
                     PUMP_CONTROL.setPump('on')
