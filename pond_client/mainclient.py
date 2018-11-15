@@ -17,7 +17,6 @@
 
 
 # WS client example
-
 import asyncio, websockets, json, socket, os, ssl
 import pondC2
 
@@ -27,14 +26,14 @@ CENTRAL_SERVER = None
 #The access token for a websocket session. Is sent with every message
 TOKEN = ""
 USER_NAME = socket.gethostname() #Make sure the hostname on the host device is "pondPiEast" and "pondPiWest" for each respective pond. 
-
+print("starting up")
 async def handler():
 
     # ssl._create_unverified_context() will allow this client to use tls
     # without trusting the cert. This should never be used in practice, 
     # But for this exercise it opens a mitm vulnerability
     async with websockets.connect(
-            'wss://'+os.environ['CENTRAL_SERVER_IP']+'/socket', ssl=ssl._create_unverified_context()) as websocket:
+            'wss://'+'192.168.1.109'+'/socket', ssl=ssl._create_unverified_context()) as websocket:
         CENTRAL_SERVER = websocket
 
         val = json.dumps({'cmd':'pi_login', 'user':USER_NAME, 'pass':'secret'})
@@ -50,9 +49,8 @@ async def handler():
         TOKEN = login_confirm['token']
 
         #After logging in, send a message to the server which states the flow_value, or whether or not the pond is flowing. 
-        await CENTRAL_SERVER.send(json.dumps({'cmd':'update_clients', 'user':USER_NAME, 'flow_value':'true', 'token':TOKEN}))
-        
-        
+        await CENTRAL_SERVER.send(json.dumps({'cmd':'update_clients', 'user':USER_NAME, 'flow_value':str(PUMP_CONTROL.getPump()), 'token':TOKEN}))
+
         #While true, listen for messages.
         while True:
             msg = await CENTRAL_SERVER.recv()
@@ -66,7 +64,7 @@ async def handler():
                 flow_value = msg['flow_value']
                 #(API CALL HERE TO SET THE PUMP)
                 PUMP_CONTROL.setOverride('on', 5)
-                if flow_value == 'true':
+                if flow_value == 'True':
                     print("Turning pump on...")
                     PUMP_CONTROL.setPump('on')
                 else:
