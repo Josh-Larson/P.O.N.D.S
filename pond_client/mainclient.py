@@ -14,13 +14,19 @@
   TODO: In the central server code, catch websocket close exceptions. 
   If a websocket closes which is a pond Pi, make sure to mark that client as offline
 """
+import sys
+
+def exit_clean(PUMP_CONTROL):
+    PUMP_CONTROL.quit()
+    sys.exit(1)
+
 
 
 # WS client example
 import asyncio, websockets, json, socket, os, ssl
 import pondC2
 
-PUMP_CONTROL = pondC2.pondC2()
+PUMP_CONTROL = None
 # Websocket object of the central server
 CENTRAL_SERVER = None
 #The access token for a websocket session. Is sent with every message
@@ -33,9 +39,15 @@ async def handler():
     # without trusting the cert. This should never be used in practice, 
     # But for this exercise it opens a mitm vulnerability
     async with websockets.connect(
-            'wss://'+os.environ['CENTRAL_SERVER_IP']+'/socket', ssl=ssl._create_unverified_context()) as websocket:
+            'wss://'+os.environ['CENTRAL_SERVER_IP']+'/socket', 
+             ssl=ssl._create_unverified_context()) as websocket:
+#Local dev test
+#   async with websockets.connect(
+#            'wss://'+'127.0.0.1'+'/socket', 
+#             ssl=ssl._create_unverified_context()) as websocket:
+       #Launches pump control system (A separate python process)
+        PUMP_CONTROL= pondC2.pondC2()
         CENTRAL_SERVER = websocket
-
         val = json.dumps({'cmd':'pi_login', 'user':USER_NAME, 'pass':'secret'})
 
         #Sends login credentials to central server. 
@@ -47,6 +59,7 @@ async def handler():
         #Decodes the JSON
         login_confirm = json.loads(login_confirm)
         TOKEN = login_confirm['token']
+
 
         #After logging in, send a message to the server which states the flow_value, or whether or not the pond is flowing. 
         await CENTRAL_SERVER.send(json.dumps({'cmd':'update_clients', 'user':USER_NAME, 'flow_value':str(PUMP_CONTROL.getPump()), 'token':TOKEN}))
@@ -72,6 +85,7 @@ async def handler():
                 await CENTRAL_SERVER.send(json.dumps({'cmd':'update_clients', 'user':USER_NAME, 'token':TOKEN, 'flow_value':flow_value}))
         CENTRAL_SERVER.close()
 
-
 #Run forever
 asyncio.get_event_loop().run_until_complete(handler())
+#If you reach this point, the connection has failed
+print("Connection Failed")
