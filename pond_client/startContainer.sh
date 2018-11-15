@@ -34,8 +34,9 @@ echo "Setting as $HOSTNAME"
 #If you are running the controller server on the same device,
 # Launch docker and connect it to the other container
 
-if [ $CONTROLLER_BOOL=="y" ]
-then 
+if [ $CONTROLLER_BOOL == "y" ]
+then
+
 docker run -h "$HOSTNAME" -e \
   "CENTRAL_SERVER_IP=frontend" \
   -v $(pwd):/usr/src --name pondPi --restart unless-stopped -d  \
@@ -45,6 +46,7 @@ docker run -h "$HOSTNAME" -e \
   --privileged cphamlet/duxnet-client
 
 else
+echo "dynasty"
 #Otherwise, you connect to the specified IP address. 
 #(Static IP of RPI)
 docker run -h "$HOSTNAME" -e \
