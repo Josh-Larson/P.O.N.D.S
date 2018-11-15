@@ -26,14 +26,14 @@ CENTRAL_SERVER = None
 #The access token for a websocket session. Is sent with every message
 TOKEN = ""
 USER_NAME = socket.gethostname() #Make sure the hostname on the host device is "pondPiEast" and "pondPiWest" for each respective pond. 
-print("starting up")
+print("Launching websocket client")
 async def handler():
 
     # ssl._create_unverified_context() will allow this client to use tls
     # without trusting the cert. This should never be used in practice, 
     # But for this exercise it opens a mitm vulnerability
     async with websockets.connect(
-            'wss://'+'192.168.1.109'+'/socket', ssl=ssl._create_unverified_context()) as websocket:
+            'wss://'+os.environ['CENTRAL_SERVER_IP']+'/socket', ssl=ssl._create_unverified_context()) as websocket:
         CENTRAL_SERVER = websocket
 
         val = json.dumps({'cmd':'pi_login', 'user':USER_NAME, 'pass':'secret'})
