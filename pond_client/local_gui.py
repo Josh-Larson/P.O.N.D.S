@@ -92,7 +92,7 @@ class LocalGUI:
 		self.overrideWindow.hide()
 		
 		override_time = int(self.override.hours.currentText()) * 3600 + int(self.override.minutes.currentText()) * 60
-		self.pond.setOverride('on', override_time)
+		self.pond.set_override('on', override_time)
 	
 	def deny_override(self):
 		self.overrideWindow.hide()
@@ -104,37 +104,37 @@ class LocalGUI:
 		self.main.automatic.setEnabled(False)
 		self.exitCount = 0
 		
-		self.pond.setOverride('off', 0)
+		self.pond.set_override('off', 0)
 	
 	def set_times(self):
 		on_time = self.main.onTime.time().toString().rsplit(':', 1)[0]
 		off_time = self.main.offTime.time().toString().rsplit(':', 1)[0]
-		self.pond.setTimes(on_time, off_time)
+		self.pond.set_times(on_time, off_time)
 		self.exitCount = 0
 	
 	def set_days(self):
 		if self.main.days.isChecked():
-			self.pond.setDays([0, 1, 2, 3])
+			self.pond.set_days([0, 1, 2, 3])
 		else:
-			self.pond.setDays([0, 1, 2, 3, 4])
+			self.pond.set_days([0, 1, 2, 3, 4])
 		self.exitCount = 0
 	
 	def system_on(self):
-		if self.pond.getOverride()[0]:
-			self.pond.setPump('on')
+		if self.pond.get_override()[0]:
+			self.pond.set_pump('on')
 		else:
 			self.end_override()
 		self.exitCount = 0
 	
 	def system_off(self):
-		if self.pond.getOverride()[0]:
-			self.pond.setPump('off')
+		if self.pond.get_override()[0]:
+			self.pond.set_pump('off')
 		else:
 			self.end_override()
 		self.exitCount = 0
 	
 	def set_led(self):
-		self.pond.setLED(self.main.ledMode.currentIndex())
+		self.pond.set_led(self.main.ledMode.currentIndex())
 		self.exitCount = 0
 	
 	def lock(self):
@@ -155,7 +155,7 @@ class LocalGUI:
 			for element in self.lockable_ui_elements:
 				element.setEnabled(True)
 			
-			override = self.pond.getOverride()[0]
+			override = self.pond.get_override()[0]
 			self.main.override.setEnabled(not override)
 			self.main.sysOff.setEnabled(override)
 			self.main.sysOn.setEnabled(override)

@@ -1,7 +1,5 @@
 from multiprocessing import Event, Process, Pipe
-from datetime import datetime as dt
 from pickle import dump, load
-from time import sleep
 from light_control import LightControl
 from pump_control import PumpControl
 
@@ -13,86 +11,89 @@ class PondC2:
 		
 		try:
 			self.defaults = load(open("defaults.p", 'rb'))
-		except:
+		except FileNotFoundError:
 			self.defaults = [0, 21600, 61200, 300, False]  # LED Mode, Pump On Time (0600), Pump Off Time (1700), NumPixels,Mirrored
 			dump(self.defaults, open("defaults.p", 'wb'))
 		
-		self.process = Process(target=self._pondC2, args=(p2, self.exitEvent, self.defaults,))
+		self.process = Process(target=self._pond_c2, args=(p2, self.exitEvent, self.defaults,))
 		self.process.start()
 	
-	def getStatus(self):
+	def get_status(self):
 		pass
 	
-	def getPump(self):
+	def get_pump(self):
 		self.pipe.send(['pump', 'GET'])
 		try:
 			self.pipe.poll(5)
 			return self.pipe.recv()
-		except:
+		except EOFError:
 			return 'Timeout'
 	
-	def getOverride(self):
+	def get_override(self):
 		self.pipe.send(['override', 'GET'])
 		try:
 			self.pipe.poll(5)
 			return self.pipe.recv()
-		except:
+		except EOFError:
 			return ['Timeout']
 	
-	def setPump(self, bool):
-		if bool == 'on' or bool == 'off':
-			self.pipe.send(['pump', bool])
+	def set_pump(self, pump):
+		if pump == 'on' or pump == 'off':
+			self.pipe.send(['pump', pump])
 	
-	def setOverride(self, bool, minutes):
-		if bool == 'on' or bool == 'off':
+	def set_override(self, override, minutes):
+		if override == 'on' or override == 'off':
 			seconds = minutes * 60
-			self.pipe.send(['override', bool, seconds])
+			self.pipe.send(['override', override, seconds])
 	
-	def getLED(self):
+	def get_led(self):
 		pass
 	
-	def setLED(self, value):
+	def set_led(self, value):
 		self.pipe.send(['LED', value])
 	
-	def getTimes(self):
+	def get_times(self):
 		on = self.defaults[1] / 3600
 		on = str(on).rjust(2, '0') + ':' + str((self.defaults[1] - (on * 3600)) / 60).ljust(2, '0')
 		off = self.defaults[2] / 3600
 		off = str(off).rjust(2, '0') + ':' + str((self.defaults[2] - (off * 3600)) / 60).ljust(2, '0')
-		return (on, off)
+		return on, off
 	
-	def setTimes(self, onTime='HH:mm', offTime='HH:mm'):
-		if onTime != 'HH:mm':
-			self.defaults[1] = (int(onTime.split(':')[0]) * 3600) + (int(onTime.split(':')[1]) * 60)
-		if offTime != 'HH:mm':
-			self.defaults[2] = (int(offTime.split(':')[0]) * 3600) + (int(offTime.split(':')[1]) * 60)
+	def set_times(self, on_time='HH:mm', off_time='HH:mm'):
+		if on_time != 'HH:mm':
+			self.defaults[1] = (int(on_time.split(':')[0]) * 3600) + (int(on_time.split(':')[1]) * 60)
+		if off_time != 'HH:mm':
+			self.defaults[2] = (int(off_time.split(':')[0]) * 3600) + (int(off_time.split(':')[1]) * 60)
 		
 		dump(self.defaults, open("defaults.p", 'wb'))
 		self.pipe.send(['times', self.defaults[1], self.defaults[2]])
 	
-	def setDays(self, days=[0, 1, 2, 3, 4]):
+	def set_days(self, days=None):
+		if days is None:
+			days = [0, 1, 2, 3, 4]
 		self.pipe.send(['days', days])
 	
 	def quit(self):
 		self.exitEvent.set()
 		self.process.join()
 	
-	def _pondC2(self, pipe, exitEvent, current):
+	@staticmethod
+	def _pond_c2(pipe, exit_event, current):
 		# Setup LED Data
-		LED_COUNT = current[3]  # Number of LED pixels.
-		LED_PIN = 18  # GPIO pin connected to the pixels (18 uses PWM!).
-		LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
-		LED_DMA = 10  # DMA channel to use for generating signal (try 10)
-		LED_BRIGHTNESS = 255  # Set to 0 for darkest and 255 for brightest
-		LED_INVERT = False  # True to invert the signal (when using NPN transistor level shift)
-		LED_CHANNEL = 0  # set to '1' for GPIOs 13, 19, 41, 45 or 53
+		led_count = current[3]  # Number of LED pixels.
+		led_pin = 18  # GPIO pin connected to the pixels (18 uses PWM!).
+		led_freq_hz = 800000  # LED signal frequency in hertz (usually 800khz)
+		led_dma = 10  # DMA channel to use for generating signal (try 10)
+		led_brightness = 255  # Set to 0 for darkest and 255 for brightest
+		led_invert = False  # True to invert the signal (when using NPN transistor level shift)
+		led_channel = 0  # set to '1' for GPIOs 13, 19, 41, 45 or 53
 		
 		# Create NeoPixel object with appropriate configuration.
-		led = LightControl(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, current[4])
+		led = LightControl(led_count, led_pin, led_freq_hz, led_dma, led_invert, led_brightness, led_channel, current[4])
 		led.set_mode(current[0])
 		pump = PumpControl(23, current[1:])
 		
-		while not exitEvent.is_set():
+		while not exit_event.is_set():
 			
 			if pipe.poll():
 				data = pipe.recv()
