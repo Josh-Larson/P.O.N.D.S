@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+from hardware_control import GPIO
 from datetime import datetime as dt
 
 class pumpControl:

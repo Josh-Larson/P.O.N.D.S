@@ -1,4 +1,4 @@
-from neopixel import *
+from hardware_control import *
 from time import sleep
 from datetime import datetime as dt
 
