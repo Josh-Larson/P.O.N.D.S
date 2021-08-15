@@ -33,20 +33,20 @@ class LocalGUI:
 		self.main.onTime.setTime(time(int(self.pond.defaults[1] / 3600), int(self.pond.defaults[1] % 3600 / 60)))
 		self.main.offTime.setTime(time(int(self.pond.defaults[2] / 3600), int(self.pond.defaults[2] % 3600 / 60)))
 		
-		self.main.override.clicked.connect(self.beginOverride)
-		self.main.automatic.clicked.connect(self.endOverride)
-		self.main.setTimes.clicked.connect(self.setTimes)
-		self.main.sysOn.clicked.connect(self.sysOn)
-		self.main.sysOff.clicked.connect(self.sysOff)
-		self.main.ledMode.currentIndexChanged.connect(self.setLED)
-		self.main.days.clicked.connect(self.setDays)
+		self.main.override.clicked.connect(self.begin_override)
+		self.main.automatic.clicked.connect(self.end_override)
+		self.main.setTimes.clicked.connect(self.set_times)
+		self.main.sysOn.clicked.connect(self.system_on)
+		self.main.sysOff.clicked.connect(self.system_off)
+		self.main.ledMode.currentIndexChanged.connect(self.set_led)
+		self.main.days.clicked.connect(self.set_days)
 		self.main.lock.clicked.connect(self.lock)
 		self.main.exit.clicked.connect(self.exit)
 		
-		self.override.ok.clicked.connect(self.approveOverride)
-		self.override.cancel.clicked.connect(self.denyOverride)
+		self.override.ok.clicked.connect(self.approve_override)
+		self.override.cancel.clicked.connect(self.deny_override)
 		
-		self.pin.enter.clicked.connect(self.checkUnlock)
+		self.pin.enter.clicked.connect(self.check_unlock)
 		self.pin.back.clicked.connect(self._back)
 		self.pin.but1.clicked.connect(self._type1)
 		self.pin.but2.clicked.connect(self._type2)
@@ -62,26 +62,26 @@ class LocalGUI:
 		self.password = '2017'
 		self.exitCount = 0
 	
-	def beginOverride(self):
+	def begin_override(self):
 		self.overrideWindow.show()
 		self.override.hours.setCurrentIndex(0)
 		self.override.minutes.setCurrentIndex(0)
 		self.exitCount = 0
 	
-	def approveOverride(self):
+	def approve_override(self):
 		self.main.override.setEnabled(False)
 		self.main.sysOff.setEnabled(True)
 		self.main.sysOn.setEnabled(True)
 		self.main.automatic.setEnabled(True)
 		self.overrideWindow.hide()
 		
-		time = int(self.override.hours.currentText()) * 3600 + int(self.override.minutes.currentText()) * 60
-		self.pond.setOverride('on', time)
+		override_time = int(self.override.hours.currentText()) * 3600 + int(self.override.minutes.currentText()) * 60
+		self.pond.setOverride('on', override_time)
 	
-	def denyOverride(self):
+	def deny_override(self):
 		self.overrideWindow.hide()
 	
-	def endOverride(self):
+	def end_override(self):
 		self.main.override.setEnabled(True)
 		self.main.sysOff.setEnabled(False)
 		self.main.sysOn.setEnabled(False)
@@ -90,34 +90,34 @@ class LocalGUI:
 		
 		self.pond.setOverride('off', 0)
 	
-	def setTimes(self):
-		onTime = self.main.onTime.time().toString().rsplit(':', 1)[0]
-		offTime = self.main.offTime.time().toString().rsplit(':', 1)[0]
-		self.pond.setTimes(onTime, offTime)
+	def set_times(self):
+		on_time = self.main.onTime.time().toString().rsplit(':', 1)[0]
+		off_time = self.main.offTime.time().toString().rsplit(':', 1)[0]
+		self.pond.setTimes(on_time, off_time)
 		self.exitCount = 0
 	
-	def setDays(self):
+	def set_days(self):
 		if self.main.days.isChecked():
 			self.pond.setDays([0, 1, 2, 3])
 		else:
 			self.pond.setDays([0, 1, 2, 3, 4])
 		self.exitCount = 0
 	
-	def sysOn(self):
+	def system_on(self):
 		if self.pond.getOverride()[0]:
 			self.pond.setPump('on')
 		else:
-			self.endOverride()
+			self.end_override()
 		self.exitCount = 0
 	
-	def sysOff(self):
+	def system_off(self):
 		if self.pond.getOverride()[0]:
 			self.pond.setPump('off')
 		else:
-			self.endOverride()
+			self.end_override()
 		self.exitCount = 0
 	
-	def setLED(self):
+	def set_led(self):
 		self.pond.setLED(self.main.ledMode.currentIndex())
 		self.exitCount = 0
 	
@@ -144,7 +144,7 @@ class LocalGUI:
 			self.pinWindow.showFullScreen()
 			self.main.lock.setText('Lock')
 	
-	def checkUnlock(self):
+	def check_unlock(self):
 		self.exitCount = 0
 		if self.pin.number.text() == self.password:
 			self.main.onTime.setEnabled(True)
@@ -217,7 +217,7 @@ class LocalGUI:
 
 def main():
 	app = QApplication(sys.argv)
-	gui = LocalGUI()
+	_ = LocalGUI()
 	sys.exit(app.exec_())
 
 
