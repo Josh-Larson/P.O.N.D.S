@@ -63,17 +63,17 @@ class LocalGUI:
 		self.pin.but0.clicked.connect(lambda: enter_pin_number("0"))
 		
 		self.lockable_ui_elements = [
-				self.main.onTime, self.main.offTime,
-				self.main.onDown, self.main.onUp,
-				self.main.offDown, self.main.offUp,
-				self.main.setTimes,
-				self.main.ledMode,
-				self.main.override,
-				self.main.sysOff, self.main.sysOn,
-				self.main.automatic,
-				self.main.days,
-				self.main.exit
-			]
+			self.main.onTime, self.main.offTime,
+			self.main.onDown, self.main.onUp,
+			self.main.offDown, self.main.offUp,
+			self.main.setTimes,
+			self.main.ledMode,
+			self.main.override,
+			self.main.sysOff, self.main.sysOn,
+			self.main.automatic,
+			self.main.days,
+			self.main.exit
+		]
 		
 		self.password = '2017'
 		self.exitCount = 0
