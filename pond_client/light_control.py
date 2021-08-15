@@ -84,13 +84,15 @@ class LightControl:
 		self.shutdown()
 	
 	def shutdown(self):
+		color_off = Color(0, 0, 0)
 		for i in range(self.strip.numPixels()):
-			self.strip.setPixelColor(i, Color(0, 0, 0))
+			self.strip.setPixelColor(i, color_off)
 		self.strip.show()
 	
 	def draw_led(self, leds, mirror=False, delay=0):
+		color_off = Color(0, 0, 0)
 		for i in range(self.strip.numPixels()):
-			self.strip.setPixelColor(i, Color(0, 0, 0))
+			self.strip.setPixelColor(i, color_off)
 		
 		if not mirror:
 			for i in leds.keys():
@@ -140,6 +142,14 @@ class LightControl:
 				return (value_max - target) + val
 
 	def _led_clock(self, hour_size, min_size, sec_size, hour_color, min_color, sec_color, seconds=False):
+		def initialize_led(val, val_max, size, color):
+			pos = self._interp(val, val_max, self.strip.numPixels() - 1)
+			half_size = (size - 1) // 2
+			led_list = [i for i in range(pos - half_size, pos + half_size + 1)]
+			led_list = self._wrap(led_list, self.strip.numPixels() - 1)
+			
+			return {i: color for i in led_list}
+		
 		time = dt.now()
 		current_time = (time - time.replace(hour=0, minute=0, second=0)).total_seconds()
 		
@@ -147,38 +157,11 @@ class LightControl:
 		minute = current_time / 60 % 60
 		hour = (current_time / 60 / 60) % 12  # 12-hour time
 		
-		sec_pos = self._interp(second, 60, self.strip.numPixels() - 1)
-		min_pos = self._interp(minute, 60, self.strip.numPixels() - 1)
-		hour_pos = self._interp(hour, 12, self.strip.numPixels() - 1)
-		
-		sec_list = [sec_pos]
-		min_list = [min_pos]
-		hour_list = [hour_pos]
-		
-		for i in range(int((sec_size - 1) / 2)):
-			sec_list.append(sec_pos + (i + 1))
-			sec_list.insert(0, sec_pos - (i + 1))
-		for i in range(int((min_size - 1) / 2)):
-			min_list.append(min_pos + (i + 1))
-			min_list.insert(0, min_pos - (i + 1))
-		for i in range(int((hour_size - 1) / 2)):
-			hour_list.append(hour_pos + (i + 1))
-			hour_list.insert(0, hour_pos - (i + 1))
-		
-		sec_list = self._wrap(sec_list, self.strip.numPixels() - 1)
-		min_list = self._wrap(min_list, self.strip.numPixels() - 1)
-		hour_list = self._wrap(hour_list, self.strip.numPixels() - 1)
-		
 		leds = {}
-		
 		if seconds:
-			for i in sec_list:
-				leds[i] = sec_color
-		for i in min_list:
-			leds[i] = min_color
-		for i in hour_list:
-			leds[i] = hour_color
-		
+			leds.update(initialize_led(second, 60, sec_size, sec_color))
+		leds.update(initialize_led(minute, 60, min_size, min_color))
+		leds.update(initialize_led(hour, 12, hour_size, hour_color))
 		return leds
 
 	@staticmethod
@@ -202,9 +185,10 @@ class LightControl:
 
 	def _maluda_light(self, iterator=0):
 		leds = {}
+		maluda_color = Color(239, 255, 1)
 		if iterator <= self.strip.numPixels():
 			for i in range(iterator):
-				leds[i] = Color(239, 255, 1)
+				leds[i] = maluda_color
 			return leds
 		else:
 			iterator = iterator - self.strip.numPixels()
@@ -213,5 +197,5 @@ class LightControl:
 					leds[i] = Color(0, 0, 0)
 					iterator -= 1
 				else:
-					leds[i] = Color(239, 255, 1)
+					leds[i] = maluda_color
 			return leds
