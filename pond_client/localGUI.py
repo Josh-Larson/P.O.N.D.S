@@ -1,9 +1,8 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QListWidgetItem, QMessageBox, QMainWindow, QLCDNumber
-import PyQt5.QtCore as QtCore
+from PyQt5.QtWidgets import QApplication, QWidget
 import sys
-from home import Ui_PONDcontrol
-from override import Ui_Form as Ui_Override
-from pin import Ui_Pin
+from gui.home import Ui_PONDcontrol
+from gui.override import Ui_Form as Ui_Override
+from gui.pin import Ui_Pin
 from pondC2 import pondC2
 from datetime import time
 
