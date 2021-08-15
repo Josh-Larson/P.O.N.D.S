@@ -2,8 +2,8 @@ from multiprocessing import Event, Process, Pipe
 from datetime import datetime as dt
 from pickle import dump, load
 from time import sleep
-from ledControl import ledControl
-from pumpControl import pumpControl
+from light_control import LightControl
+from pump_control import PumpControl
 
 class pondC2():
 
@@ -93,9 +93,9 @@ class pondC2():
 
 
         # Create NeoPixel object with appropriate configuration.
-        led = ledControl(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL,current[4])
+        led = LightControl(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, current[4])
         led.setMode(current[0])
-        pump = pumpControl(23,current[1:])
+        pump = PumpControl(23, current[1:])
 
 
         while not exitEvent.is_set():

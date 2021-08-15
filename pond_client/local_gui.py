@@ -7,8 +7,7 @@ from pondC2 import pondC2
 from datetime import time
 
 
-class localGUI():
-	
+class LocalGUI:
 	def __init__(self):
 		self.mainWindow = QWidget()
 		self.main = Ui_PONDcontrol()
@@ -218,7 +217,7 @@ class localGUI():
 
 def main():
 	app = QApplication(sys.argv)
-	gui = localGUI()
+	gui = LocalGUI()
 	sys.exit(app.exec_())
 
 

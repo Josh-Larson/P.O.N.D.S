@@ -3,7 +3,7 @@ from time import sleep
 from datetime import datetime as dt
 
 
-class ledControl:
+class LightControl:
 	def __init__(self, LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, mirrored):
 		self.strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
 		self.strip.begin()

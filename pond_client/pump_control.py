@@ -2,7 +2,7 @@ from hardware_control import GPIO
 from datetime import datetime as dt
 
 
-class pumpControl:
+class PumpControl:
 	def __init__(self, pin, pumpTimes):
 		GPIO.setmode(GPIO.BCM)
 		GPIO.setup(pin, GPIO.OUT)
