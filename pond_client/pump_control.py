@@ -3,69 +3,69 @@ from datetime import datetime as dt
 
 
 class PumpControl:
-	def __init__(self, pin, pumpTimes):
+	def __init__(self, pin, pump_times):
 		GPIO.setmode(GPIO.BCM)
 		GPIO.setup(pin, GPIO.OUT)
 		GPIO.output(pin, GPIO.LOW)
 		self.pin = pin
 		
-		self.pumpTimes = pumpTimes
-		self.pumpStatus = False
-		self.pumpOverride = False
-		self.pumpOverrideTime = -1
+		self.pump_times = pump_times
+		self.pump_status = False
+		self.pump_override = False
+		self.pump_override_time = -1
 		
 		self.activeDays = [0, 1, 2, 3, 4]
 	
-	def setTimes(self, times):
-		self.pumpTimes = times
+	def set_times(self, times):
+		self.pump_times = times
 	
-	def setDays(self, days):
+	def set_days(self, days):
 		self.activeDays = days
 	
-	def setOverride(self, seconds):
+	def set_override(self, seconds):
 		time = dt.now()
-		currTime = (time - time.replace(hour=0, minute=0, second=0)).total_seconds()
-		self.pumpOverride = True
-		if currTime + seconds >= 86340:
-			self.pumpOverrideTime = 86340
+		current_time = (time - time.replace(hour=0, minute=0, second=0)).total_seconds()
+		self.pump_override = True
+		if current_time + seconds >= 86340:
+			self.pump_override_time = 86340
 		else:
-			self.pumpOverrideTime = currTime + seconds
+			self.pump_override_time = current_time + seconds
 	
-	def setAuto(self):
-		self.pumpOverride = False
-		self.pumpOverrideTime = -1
+	def set_automatic_mode(self):
+		self.pump_override = False
+		self.pump_override_time = -1
 	
-	def setPump(self, status):
-		if type(status) is bool and self.pumpOverride:
-			self.pumpStatus = status
-			GPIO.output(self.pin, GPIO.HIGH if self.pumpStatus else GPIO.LOW)
+	def get_override_state(self):
+		return [self.pump_override, self.pump_override_time]
 	
-	def updatePump(self):
+	def set_pump_status(self, status):
+		if type(status) is bool and self.pump_override:
+			self.pump_status = status
+			GPIO.output(self.pin, GPIO.HIGH if self.pump_status else GPIO.LOW)
+	
+	def get_pump_status(self):
+		return self.pump_status
+	
+	def update_pump(self):
 		time = dt.now()
-		currTime = (time - time.replace(hour=0, minute=0, second=0)).total_seconds()
+		current_time = (time - time.replace(hour=0, minute=0, second=0)).total_seconds()
 		
-		if not self.pumpOverride:
-			if self.pumpStatus:
-				if currTime >= self.pumpTimes[1] or currTime < self.pumpTimes[0] or dt.weekday(time) not in self.activeDays:
-					self.pumpStatus = False
-					GPIO.output(self.pin, GPIO.HIGH if self.pumpStatus else GPIO.LOW)
+		if not self.pump_override:
+			if self.pump_status:
+				if current_time >= self.pump_times[1] or current_time < self.pump_times[0] or dt.weekday(time) not in self.activeDays:
+					self.pump_status = False
+					GPIO.output(self.pin, GPIO.HIGH if self.pump_status else GPIO.LOW)
 			
 			else:
-				if self.pumpTimes[0] <= currTime < self.pumpTimes[1] and dt.weekday(time) in self.activeDays:
-					self.pumpStatus = True
-					GPIO.output(self.pin, GPIO.HIGH if self.pumpStatus else GPIO.LOW)
+				if self.pump_times[0] <= current_time < self.pump_times[1] and dt.weekday(time) in self.activeDays:
+					self.pump_status = True
+					GPIO.output(self.pin, GPIO.HIGH if self.pump_status else GPIO.LOW)
 		
 		else:
-			if currTime >= self.pumpOverrideTime:
-				self.setAuto()
+			if current_time >= self.pump_override_time:
+				self.set_automatic_mode()
 		
-		return self.pumpStatus
-	
-	def getStatus(self):
-		return self.pumpStatus
-	
-	def getOverride(self):
-		return [self.pumpOverride, self.pumpOverrideTime]
+		return self.pump_status
 	
 	def shutdown(self):
 		GPIO.output(self.pin, GPIO.LOW)

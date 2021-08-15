@@ -104,33 +104,33 @@ class pondC2():
                 data = pipe.recv()
 
                 if data[0] == 'times':
-                    pump.setTimes(data[1:])
+                    pump.set_times(data[1:])
 
                 if data[0] == 'pump':
                     if data[1] == 'on':
-                        pump.setPump(True)
+                        pump.set_pump_status(True)
                     elif data[1] == 'off':
-                        pump.setPump(False)
+                        pump.set_pump_status(False)
                     elif data[1] == 'GET':
-                        pipe.send(pump.getStatus())
+                        pipe.send(pump.get_pump_status())
 
                 if data[0] == 'override':
                     if data[1] == 'on':
-                        pump.setOverride(data[2])
+                        pump.set_override(data[2])
                     elif data[1] == 'off':
-                        pump.setAuto()
+                        pump.set_automatic_mode()
                     elif data[1] == 'GET':
-                        pipe.send(pump.getOverride())
+                        pipe.send(pump.get_override_state())
 
                 if data[0] == 'LED':
                     led.setMode(data[1])
 
                 if data[0] == 'days':
-                    pump.setDays(data[1])
+                    pump.set_days(data[1])
 
 
             # Turns pump on or off
-            led.updateLed(pump.updatePump())
+            led.updateLed(pump.update_pump())
 
 
 
