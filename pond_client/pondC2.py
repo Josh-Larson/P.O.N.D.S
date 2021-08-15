@@ -94,7 +94,7 @@ class pondC2():
 
         # Create NeoPixel object with appropriate configuration.
         led = LightControl(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, current[4])
-        led.setMode(current[0])
+        led.set_mode(current[0])
         pump = PumpControl(23, current[1:])
 
 
@@ -123,14 +123,14 @@ class pondC2():
                         pipe.send(pump.get_override_state())
 
                 if data[0] == 'LED':
-                    led.setMode(data[1])
+                    led.set_mode(data[1])
 
                 if data[0] == 'days':
                     pump.set_days(data[1])
 
 
             # Turns pump on or off
-            led.updateLed(pump.update_pump())
+            led.update_led(pump.update_pump())
 
 
 
