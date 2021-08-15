@@ -46,18 +46,34 @@ class LocalGUI:
 		self.override.ok.clicked.connect(self.approve_override)
 		self.override.cancel.clicked.connect(self.deny_override)
 		
+		def enter_pin_number(num):
+			self.pin.number.insert(num)
+		
 		self.pin.enter.clicked.connect(self.check_unlock)
 		self.pin.back.clicked.connect(self._back)
-		self.pin.but1.clicked.connect(self._type1)
-		self.pin.but2.clicked.connect(self._type2)
-		self.pin.but3.clicked.connect(self._type3)
-		self.pin.but4.clicked.connect(self._type4)
-		self.pin.but5.clicked.connect(self._type5)
-		self.pin.but6.clicked.connect(self._type6)
-		self.pin.but7.clicked.connect(self._type7)
-		self.pin.but8.clicked.connect(self._type8)
-		self.pin.but9.clicked.connect(self._type9)
-		self.pin.but0.clicked.connect(self._type0)
+		self.pin.but1.clicked.connect(lambda: enter_pin_number("1"))
+		self.pin.but2.clicked.connect(lambda: enter_pin_number("2"))
+		self.pin.but3.clicked.connect(lambda: enter_pin_number("3"))
+		self.pin.but4.clicked.connect(lambda: enter_pin_number("4"))
+		self.pin.but5.clicked.connect(lambda: enter_pin_number("5"))
+		self.pin.but6.clicked.connect(lambda: enter_pin_number("6"))
+		self.pin.but7.clicked.connect(lambda: enter_pin_number("7"))
+		self.pin.but8.clicked.connect(lambda: enter_pin_number("8"))
+		self.pin.but9.clicked.connect(lambda: enter_pin_number("9"))
+		self.pin.but0.clicked.connect(lambda: enter_pin_number("0"))
+		
+		self.lockable_ui_elements = [
+				self.main.onTime, self.main.offTime,
+				self.main.onDown, self.main.onUp,
+				self.main.offDown, self.main.offUp,
+				self.main.setTimes,
+				self.main.ledMode,
+				self.main.override,
+				self.main.sysOff, self.main.sysOn,
+				self.main.automatic,
+				self.main.days,
+				self.main.exit
+			]
 		
 		self.password = '2017'
 		self.exitCount = 0
@@ -125,20 +141,8 @@ class LocalGUI:
 		self.exitCount = 0
 		if self.main.lock.isChecked():
 			self.main.lock.setText('Unlock')
-			self.main.onTime.setEnabled(False)
-			self.main.offTime.setEnabled(False)
-			self.main.onDown.setEnabled(False)
-			self.main.onUp.setEnabled(False)
-			self.main.offDown.setEnabled(False)
-			self.main.offUp.setEnabled(False)
-			self.main.setTimes.setEnabled(False)
-			self.main.ledMode.setEnabled(False)
-			self.main.override.setEnabled(False)
-			self.main.sysOff.setEnabled(False)
-			self.main.sysOn.setEnabled(False)
-			self.main.automatic.setEnabled(False)
-			self.main.days.setEnabled(False)
-			self.main.exit.setEnabled(False)
+			for element in self.lockable_ui_elements:
+				element.setEnabled(False)
 		else:
 			self.pin.number.clear()
 			self.pinWindow.showFullScreen()
@@ -147,27 +151,15 @@ class LocalGUI:
 	def check_unlock(self):
 		self.exitCount = 0
 		if self.pin.number.text() == self.password:
-			self.main.onTime.setEnabled(True)
-			self.main.offTime.setEnabled(True)
-			self.main.onDown.setEnabled(True)
-			self.main.onUp.setEnabled(True)
-			self.main.offDown.setEnabled(True)
-			self.main.offUp.setEnabled(True)
-			self.main.setTimes.setEnabled(True)
-			self.main.ledMode.setEnabled(True)
-			self.main.days.setEnabled(True)
-			self.main.exit.setEnabled(True)
-			if self.pond.getOverride()[0] is True:
-				self.main.override.setEnabled(False)
-				self.main.sysOff.setEnabled(True)
-				self.main.sysOn.setEnabled(True)
-				self.main.automatic.setEnabled(True)
-			else:
-				self.main.override.setEnabled(True)
-				self.main.sysOff.setEnabled(False)
-				self.main.sysOn.setEnabled(False)
-				self.main.automatic.setEnabled(False)
-		
+			# Unlock
+			for element in self.lockable_ui_elements:
+				element.setEnabled(True)
+			
+			override = self.pond.getOverride()[0]
+			self.main.override.setEnabled(not override)
+			self.main.sysOff.setEnabled(override)
+			self.main.sysOn.setEnabled(override)
+			self.main.automatic.setEnabled(override)
 		else:
 			self.main.lock.setChecked(True)
 			self.main.lock.setText('Unlock')
@@ -180,36 +172,6 @@ class LocalGUI:
 		else:
 			self.pond.quit()
 			self.mainWindow.close()
-	
-	def _type1(self):
-		self.pin.number.insert('1')
-	
-	def _type2(self):
-		self.pin.number.insert('2')
-	
-	def _type3(self):
-		self.pin.number.insert('3')
-	
-	def _type4(self):
-		self.pin.number.insert('4')
-	
-	def _type5(self):
-		self.pin.number.insert('5')
-	
-	def _type6(self):
-		self.pin.number.insert('6')
-	
-	def _type7(self):
-		self.pin.number.insert('7')
-	
-	def _type8(self):
-		self.pin.number.insert('8')
-	
-	def _type9(self):
-		self.pin.number.insert('9')
-	
-	def _type0(self):
-		self.pin.number.insert('0')
 	
 	def _back(self):
 		self.pin.number.backspace()
