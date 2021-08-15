@@ -3,7 +3,7 @@ import sys
 from gui.home import Ui_PONDcontrol
 from gui.override import Ui_Form as Ui_Override
 from gui.pin import Ui_Pin
-from pondC2 import pondC2
+from pond_c2 import PondC2
 from datetime import time
 
 
@@ -28,7 +28,7 @@ class LocalGUI:
 		self.pin = Ui_Pin()
 		self.pin.setupUi(self.pinWindow)
 		
-		self.pond = pondC2()
+		self.pond = PondC2()
 		
 		self.main.onTime.setTime(time(int(self.pond.defaults[1] / 3600), int(self.pond.defaults[1] % 3600 / 60)))
 		self.main.offTime.setTime(time(int(self.pond.defaults[2] / 3600), int(self.pond.defaults[2] % 3600 / 60)))

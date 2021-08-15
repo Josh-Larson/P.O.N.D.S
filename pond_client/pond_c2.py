@@ -5,7 +5,7 @@ from time import sleep
 from light_control import LightControl
 from pump_control import PumpControl
 
-class pondC2():
+class PondC2():
 
     def __init__(self):
         self.pipe, p2 = Pipe()
@@ -143,4 +143,4 @@ class pondC2():
 
 
 if __name__ == "__main__":
-    c = pondC2()
+    c = PondC2()
