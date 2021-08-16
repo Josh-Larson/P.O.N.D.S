@@ -1,4 +1,7 @@
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5 import QtCore, QtGui
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPainter, QPen
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel
 import sys
 from gui.home import Ui_PONDcontrol
 from gui.override import Ui_Form as Ui_Override
@@ -6,6 +9,38 @@ from gui.pin import Ui_Pin
 from pond_c2 import PondC2
 from datetime import time
 
+
+class LEDDebugWindow(QWidget):
+	def __init__(self, parent=None):
+		super(LEDDebugWindow, self).__init__(parent)
+		self.setObjectName("LED Debug")
+		self.setWindowModality(QtCore.Qt.NonModal)
+		self.setEnabled(True)
+		self.resize(500, 500)
+		
+		canvas = QtGui.QPixmap(500, 500)
+		canvas.fill(QtGui.QColor(0, 0, 0))
+		self.canvas = QLabel()
+		self.canvas.setPixmap(canvas)
+		
+		layout = QVBoxLayout()
+		layout.addWidget(self.canvas)
+		self.setLayout(layout)
+	
+	def update_led(self, led_array):
+		total = len(led_array)
+		cols = 15
+		rows = (total + cols - 1) // cols
+		box_size = min(self.canvas.pixmap().width() / cols, self.canvas.pixmap().height() / rows)
+		painter = QPainter(self.canvas.pixmap())
+		self.canvas.pixmap().fill(QtGui.QColor(0, 0, 0))
+		for i, color in enumerate(led_array):
+			col = i % cols
+			row = i // cols
+			painter.setPen(QPen(Qt.red, 1, Qt.SolidLine))
+			painter.fillRect(col * box_size, row * box_size, box_size, box_size)
+		painter.end()
+	
 
 class LocalGUI:
 	def __init__(self):
@@ -15,7 +50,7 @@ class LocalGUI:
 		self.mainWindow.show()
 		self.mainWindow.showFullScreen()
 		self.main.ledMode.addItems(['Clock', 'Rainbow', 'Maluda', 'Off'])
-		
+
 		self.overrideWindow = QWidget()
 		self.override = Ui_Override()
 		self.override.setupUi(self.overrideWindow)
@@ -23,16 +58,16 @@ class LocalGUI:
 			self.override.hours.addItem(str(i))
 		for i in range(60):
 			self.override.minutes.addItem(str(i))
-		
+
 		self.pinWindow = QWidget()
 		self.pin = Ui_Pin()
 		self.pin.setupUi(self.pinWindow)
-		
+
 		self.pond = PondC2()
-		
+
 		self.main.onTime.setTime(time(int(self.pond.defaults[1] / 3600), int(self.pond.defaults[1] % 3600 / 60)))
 		self.main.offTime.setTime(time(int(self.pond.defaults[2] / 3600), int(self.pond.defaults[2] % 3600 / 60)))
-		
+
 		self.main.override.clicked.connect(self.begin_override)
 		self.main.automatic.clicked.connect(self.end_override)
 		self.main.setTimes.clicked.connect(self.set_times)
@@ -42,13 +77,13 @@ class LocalGUI:
 		self.main.days.clicked.connect(self.set_days)
 		self.main.lock.clicked.connect(self.lock)
 		self.main.exit.clicked.connect(self.exit)
-		
+
 		self.override.ok.clicked.connect(self.approve_override)
 		self.override.cancel.clicked.connect(self.deny_override)
-		
+
 		def enter_pin_number(num):
 			self.pin.number.insert(num)
-		
+
 		self.pin.enter.clicked.connect(self.check_unlock)
 		self.pin.back.clicked.connect(self._back)
 		self.pin.but1.clicked.connect(lambda: enter_pin_number("1"))
@@ -61,7 +96,7 @@ class LocalGUI:
 		self.pin.but8.clicked.connect(lambda: enter_pin_number("8"))
 		self.pin.but9.clicked.connect(lambda: enter_pin_number("9"))
 		self.pin.but0.clicked.connect(lambda: enter_pin_number("0"))
-		
+
 		self.lockable_ui_elements = [
 			self.main.onTime, self.main.offTime,
 			self.main.onDown, self.main.onUp,
@@ -74,10 +109,13 @@ class LocalGUI:
 			self.main.days,
 			self.main.exit
 		]
-		
+
 		self.password = '2017'
 		self.exitCount = 0
-	
+		
+		# self.led_window = LEDDebugWindow()
+		# self.led_window.show()
+		
 	def begin_override(self):
 		self.overrideWindow.show()
 		self.override.hours.setCurrentIndex(0)

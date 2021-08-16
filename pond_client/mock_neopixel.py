@@ -26,6 +26,10 @@ class Adafruit_NeoPixel:
 		assert 0 <= idx < self.led_count
 		self.led_status[idx] = color
 	
+	def getPixelColor(self, idx):
+		assert 0 <= idx < self.led_count
+		return self.led_status[idx]
+	
 	def begin(self):
 		pass
 	
